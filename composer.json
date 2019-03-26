@@ -1,0 +1,17 @@
+{
+    "name": "mradang/lumen-custom-field",
+    "description": "lumen-custom-field",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mradang",
+            "email": "mradang@163.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "mradang\\LumenCustomField\\": "src"
+        }
+    }
+}
