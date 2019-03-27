@@ -11,10 +11,12 @@ use mradang\LumenCustomField\Services\ValueService;
 
 trait CustomFieldTrait {
 
+    // 获取字段分组
     public static function customFieldGroups() {
         return GroupService::all(__CLASS__);
     }
 
+    // 创建字段分组
     public static function customFieldGroupCreate($name) {
         $validator = validator(['name' => $name], [
             'name' => Rule::unique('custom_field_groups')->where(function ($query) {
@@ -27,6 +29,7 @@ trait CustomFieldTrait {
         return GroupService::create(__CLASS__, $passes['name']);
     }
 
+    // 更新字段分组
     public static function customFieldGroupUpdate($id, $name) {
         $validator = validator(['name' => $name], [
             'name' => Rule::unique('custom_field_groups')->where(function ($query) {
@@ -39,10 +42,12 @@ trait CustomFieldTrait {
         return GroupService::update(__CLASS__, $id, $name);
     }
 
+    // 删除字段分组
     public static function customFieldGroupDelete($id) {
         return GroupService::delete(__CLASS__, $id);
     }
 
+    // 字段分组排序
     public static function customFieldGroupSaveSort(array $data) {
         $validator = validator(['sorts' => $data], [
             'sorts.*.id' => 'required|integer|min:1',
@@ -52,10 +57,12 @@ trait CustomFieldTrait {
         return GroupService::saveSort($sorts);
     }
 
+    // 获取字段
     public static function customFields() {
         return FieldService::all(__CLASS__);
     }
 
+    // 创建字段
     public static function customFieldCreate($name, $type, array $options = [], $group_id = 0) {
         $validator = validator(compact('name', 'type', 'options', 'group_id'), [
             'name' => Rule::unique('custom_fields')->where(function ($query) {
@@ -78,6 +85,7 @@ trait CustomFieldTrait {
         );
     }
 
+    // 修改字段
     public static function customFieldUpdate($id, $name, $type, array $options = [], $group_id = 0) {
         $validator = validator(compact('id', 'name', 'type', 'options', 'group_id'), [
             'name' => Rule::unique('custom_fields')->where(function ($query) {
@@ -101,10 +109,12 @@ trait CustomFieldTrait {
         );
     }
 
+    // 删除字段
     public static function customFieldDelete($id) {
         return FieldService::delete(__CLASS__, $id);
     }
 
+    // 字段排序
     public static function customFieldSaveSort(array $data) {
         $validator = validator(['sorts' => $data], [
             'sorts.*.id' => 'required|integer|min:1',
@@ -114,6 +124,7 @@ trait CustomFieldTrait {
         return FieldService::saveSort($sorts);
     }
 
+    // 保存定制字段数据
     // data: 每项需包含两个属性：field_id, value
     public function customFieldSaveData(array $data) {
         $validator = validator(['values' => $data], [
@@ -124,6 +135,7 @@ trait CustomFieldTrait {
         return ValueService::save(__CLASS__, $this->getKey(), $ret['values']);
     }
 
+    // 取定制字段数据
     // Attribute: customFieldData
     public function getCustomFieldDataAttribute() {
         return ValueService::get(__CLASS__, $this->getKey());
