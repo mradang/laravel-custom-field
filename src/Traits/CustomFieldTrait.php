@@ -129,9 +129,9 @@ trait CustomFieldTrait {
         return ValueService::get(__CLASS__, $this->getKey());
     }
 
-    public static function bootCustomField() {
+    public static function bootCustomFieldTrait() {
         static::deleting(function($model) {
-            ValueService::clear(__CLASS__, $model->id);
+            ValueService::delete(__CLASS__, $model->id);
         });
     }
 

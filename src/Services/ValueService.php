@@ -24,7 +24,7 @@ class ValueService {
         return $value ? $value->data : [];
     }
 
-    public static function clear($class, $key) {
+    public static function delete($class, $key) {
         FieldValue::where([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
