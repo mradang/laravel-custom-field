@@ -74,6 +74,11 @@ trait CustomFieldTrait {
         return FieldService::saveSort($sorts);
     }
 
+    // 字段移动
+    public static function customFieldMove($id, $group_id) {
+        return FieldService::move(__CLASS__, $id, $group_id);
+    }
+
     // 保存定制字段数据
     // data: 每项需包含两个属性：field_id, value
     public function customFieldSaveData(array $data) {

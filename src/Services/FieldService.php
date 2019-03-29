@@ -55,4 +55,17 @@ class FieldService {
         }
     }
 
+    public static function move($class, $id, $group_id) {
+        $field = Field::findOrFail($id);
+        if ($field->model === $class) {
+            $field->group_id = $group_id;
+            $field->sort = Field::where([
+                'model' => $class,
+                'group_id' => $group_id,
+            ])->max('sort') + 1;
+            $field->save();
+            return $field;
+        }
+    }
+
 }

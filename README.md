@@ -71,6 +71,12 @@ sortFields(Request $request)
 [{id, sort}]
 ```
 
+- 字段移动
+```php
+moveField(Request $request)
+[id, group_id]
+```
+
 ## 模型
 引入 CustomFieldTrait
 ```php
@@ -125,6 +131,11 @@ Model::customFieldDelete($id)
 - 字段排序
 ```php
 Model::customFieldSaveSort(array $data)
+```
+
+- 字段移动
+```php
+Model::customFieldMove($id, $group_id)
 ```
 
 - 保存定制字段数据

@@ -113,4 +113,15 @@ trait CustomFieldControllerTrait {
         $this->customFieldModel()::customFieldSaveSort($sorts);
     }
 
+    public function moveField(Request $request) {
+        $validatedData = $this->validate($request, [
+            'id' => 'required|integer',
+            'group_id' => 'required|integer',
+        ]);
+
+        extract($validatedData);
+
+        return $this->customFieldModel()::customFieldMove($id, $group_id);
+    }
+
 }
