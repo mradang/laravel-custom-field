@@ -152,3 +152,17 @@ array $model->customFieldData
 - custom_field_groups
 - custom_fields
 - custom_field_values
+
+## 根据需要增加路由
+```php
+$router->post('getFieldGroups', 'XXXXController@getFieldGroups');
+$router->post('getFields', 'XXXXController@getFields');
+
+$router->post('saveFieldGroup', 'XXXXController@saveFieldGroup');
+$router->post('deleteFieldGroup', 'XXXXController@deleteFieldGroup');
+$router->post('sortFieldGroups', 'XXXXController@sortFieldGroups');
+$router->post('saveField', 'XXXXController@saveField');
+$router->post('deleteField', 'XXXXController@deleteField');
+$router->post('sortFields', 'XXXXController@sortFields');
+$router->post('moveField', 'XXXXController@moveField');
+```
