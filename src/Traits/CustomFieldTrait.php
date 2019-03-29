@@ -18,27 +18,11 @@ trait CustomFieldTrait {
 
     // 创建字段分组
     public static function customFieldGroupCreate($name) {
-        $validator = validator(['name' => $name], [
-            'name' => Rule::unique('custom_field_groups')->where(function ($query) {
-                $query->where('model', __CLASS__);
-            }),
-        ], [
-            'name.unique' => '字段分组已存在',
-        ]);
-        $passes = $validator->validate();
-        return GroupService::create(__CLASS__, $passes['name']);
+        return GroupService::create(__CLASS__, $name);
     }
 
     // 更新字段分组
     public static function customFieldGroupUpdate($id, $name) {
-        $validator = validator(['name' => $name], [
-            'name' => Rule::unique('custom_field_groups')->where(function ($query) {
-                $query->where('model', __CLASS__);
-            })->ignore($id),
-        ], [
-            'name.unique' => '字段分组已存在',
-        ]);
-        $passes = $validator->validate();
         return GroupService::update(__CLASS__, $id, $name);
     }
 
@@ -48,12 +32,7 @@ trait CustomFieldTrait {
     }
 
     // 字段分组排序
-    public static function customFieldGroupSaveSort(array $data) {
-        $validator = validator(['sorts' => $data], [
-            'sorts.*.id' => 'required|integer|min:1',
-            'sorts.*.sort' => 'required|integer',
-        ]);
-        $sorts = $validator->validate()['sorts'];
+    public static function customFieldGroupSaveSort(array $sorts) {
         return GroupService::saveSort($sorts);
     }
 
@@ -64,48 +43,24 @@ trait CustomFieldTrait {
 
     // 创建字段
     public static function customFieldCreate($name, $type, array $options = [], $group_id = 0) {
-        $validator = validator(compact('name', 'type', 'options', 'group_id'), [
-            'name' => Rule::unique('custom_fields')->where(function ($query) {
-                $query->where('model', __CLASS__);
-            }),
-            'type' => 'required|integer',
-            'options' => 'array',
-            'group_id' => 'integer',
-        ], [
-            'name.unique' => '字段名已存在',
-        ]);
-
-        $passes = $validator->validate();
         return FieldService::create(
             __CLASS__,
-            array_get($passes, 'group_id', 0),
-            $passes['name'],
-            $passes['type'],
-            array_get($passes, 'options', [])
+            $group_id,
+            $name,
+            $type,
+            $options
         );
     }
 
     // 修改字段
     public static function customFieldUpdate($id, $name, $type, array $options = [], $group_id = 0) {
-        $validator = validator(compact('id', 'name', 'type', 'options', 'group_id'), [
-            'name' => Rule::unique('custom_fields')->where(function ($query) {
-                $query->where('model', __CLASS__);
-            })->ignore($id),
-            'type' => 'required|integer',
-            'options' => 'array',
-            'group_id' => 'integer',
-        ], [
-            'name.unique' => '字段名已存在',
-        ]);
-
-        $passes = $validator->validate();
         return FieldService::update(
             __CLASS__,
-            array_get($passes, 'group_id', 0),
+            $group_id,
             $id,
-            $passes['name'],
-            $passes['type'],
-            array_get($passes, 'options', [])
+            $name,
+            $type,
+            $options
         );
     }
 
@@ -115,12 +70,7 @@ trait CustomFieldTrait {
     }
 
     // 字段排序
-    public static function customFieldSaveSort(array $data) {
-        $validator = validator(['sorts' => $data], [
-            'sorts.*.id' => 'required|integer|min:1',
-            'sorts.*.sort' => 'required|integer',
-        ]);
-        $sorts = $validator->validate()['sorts'];
+    public static function customFieldSaveSort(array $sorts) {
         return FieldService::saveSort($sorts);
     }
 
