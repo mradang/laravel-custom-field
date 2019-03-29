@@ -14,13 +14,69 @@ composer require mradang/lumen-custom-field
 $app->register(mradang\LumenCustomField\LumenCustomFieldServiceProvider::class);
 ```
 
-## 引入
-模型引入 CustomFieldTrait
+## 控制器
+引入 CustomFieldControllerTrait
+```php
+use mradang\LumenCustomField\Traits\CustomFieldControllerTrait;
+```
+
+- 获取定制模型类
+```php
+abstract protected function customFieldModel();
+```
+
+- 保存字段分组
+```php
+saveFieldGroup(Request $request)
+[id, name]
+```
+
+- 获取字段分组
+```php
+getFieldGroups()
+```
+
+- 删除字段分组
+```php
+deleteFieldGroup(Request $request)
+[id]
+```
+
+- 字段分组排序
+```php
+sortFieldGroups(Request $request)
+[{id, sort}]
+```
+
+- 保存字段
+```php
+saveField(Request $request)
+[id, name, type, options, group_id]
+```
+
+- 获取字段
+```php
+getFields()
+```
+
+- 删除字段
+```php
+deleteField(Request $request)
+[id]
+```
+
+- 字段排序
+```php
+sortFields(Request $request)
+[{id, sort}]
+```
+
+## 模型
+引入 CustomFieldTrait
 ```php
 use mradang\LumenCustomField\Traits\CustomFieldTrait;
 ```
 
-## 使用
 - 获取字段分组
 ```php
 Model::customFieldGroups()
