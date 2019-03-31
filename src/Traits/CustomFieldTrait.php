@@ -90,6 +90,16 @@ trait CustomFieldTrait {
         return ValueService::save(__CLASS__, $this->getKey(), $ret['values']);
     }
 
+    // 保存单个定制字段数据
+    public function customFieldSaveDataItem(int $field_id, $value) {
+        $validator = validator(compact('field_id', 'value'), [
+            'field_id' => 'required|integer|min:1',
+            'value' => 'required|string|nullable',
+        ]);
+        $ret = $validator->validate();
+        return ValueService::saveItem(__CLASS__, $this->getKey(), $ret);
+    }
+
     // 取定制字段数据
     // Attribute: customFieldData
     public function getCustomFieldDataAttribute() {
