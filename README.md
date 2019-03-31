@@ -143,6 +143,16 @@ Model::customFieldMove($id, $group_id)
 $model->customFieldSaveData(array $data)
 ```
 
+- 保存单个定制字段数据
+```php
+$model->customFieldSaveDataItem(int $field_id, $value)
+```
+
+- 获取单个定制字段数据
+```php
+$model->customFieldGetDataItem(int $field_id)
+```
+
 - 取定制字段数据
 ```php
 array $model->customFieldData

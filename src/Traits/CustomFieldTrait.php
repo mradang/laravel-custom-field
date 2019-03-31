@@ -100,6 +100,15 @@ trait CustomFieldTrait {
         return ValueService::saveItem(__CLASS__, $this->getKey(), $ret);
     }
 
+    // 获取单个定制字段数据
+    public function customFieldGetDataItem(int $field_id) {
+        $validator = validator(compact('field_id'), [
+            'field_id' => 'required|integer|min:1',
+        ]);
+        $ret = $validator->validate();
+        return ValueService::getItem(__CLASS__, $this->getKey(), $ret['field_id']);
+    }
+
     // 取定制字段数据
     // Attribute: customFieldData
     public function getCustomFieldDataAttribute() {
