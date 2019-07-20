@@ -95,12 +95,12 @@ trait CustomFieldTrait {
     // 保存定制字段数据
     // data: 每项需包含两个属性：field_id, value
     public function customFieldSaveData(array $data) {
-        $validator = validator(['values' => $data], [
-            'values.*.field_id' => 'required|integer|min:1',
-            'values.*.value' => 'string',
+        $validator = validator($data, [
+            '*.field_id' => 'required|integer|min:1',
+            '*.value' => 'string',
         ]);
         $ret = $validator->validate();
-        return ValueService::save(__CLASS__, $this->getKey(), Arr::get($ret, 'values', []));
+        return ValueService::save(__CLASS__, $this->getKey(), $ret);
     }
 
     // 保存单个定制字段数据
