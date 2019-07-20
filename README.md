@@ -178,6 +178,9 @@ $model->customFieldGetDataItem(int $field_id)
 array $model->customFieldData
 ```
 
+## 异常
+- mradang\LumenCustomField\CustomFieldException
+
 ## 添加的数据表迁移
 - custom_field_groups
 - custom_fields
