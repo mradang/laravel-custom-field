@@ -25,6 +25,16 @@ use mradang\LumenCustomField\Traits\CustomFieldControllerTrait;
 abstract protected function customFieldModel();
 ```
 
+- 保留字段分组名（array）
+```php
+protected function customFieldExcludeGroups();
+```
+
+- 保留字段名（array）
+```php
+protected function customFieldExcludeFields();
+```
+
 - 保存字段分组
 ```php
 saveFieldGroup(Request $request)
@@ -93,6 +103,11 @@ Model::customFieldGroups()
 Model::customFieldGroupCreate($name)
 ```
 
+- 确保字段分组存在
+```php
+Model::customFieldGroupEnsureExists($name)
+```
+
 - 更新字段分组
 ```php
 Model::customFieldGroupUpdate($id, $name)
@@ -111,6 +126,11 @@ Model::customFieldGroupSaveSort(array $data)
 - 获取字段
 ```php
 Model::customFields()
+```
+
+- 按分组获取字段
+```php
+Model::customFieldsByGroupId($id, $name)
 ```
 
 - 创建字段
