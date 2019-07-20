@@ -3,6 +3,7 @@
 namespace mradang\LumenCustomField\Services;
 
 use mradang\LumenCustomField\Models\CustomFieldGroup as Group;
+use mradang\LumenCustomField\CustomFieldException as Exception;
 
 class GroupService {
 
@@ -44,7 +45,7 @@ class GroupService {
     public static function delete($class, $id) {
         $group = Group::withCount('fields')->findOrFail($id);
         if ($group->fields_count) {
-            throw new \Exception('分组下存在字段，不能删除！');
+            throw new Exception('分组下存在字段，不能删除！');
         }
         if ($group->model === $class) {
             return $group->delete();

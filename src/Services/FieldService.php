@@ -4,6 +4,7 @@ namespace mradang\LumenCustomField\Services;
 
 use mradang\LumenCustomField\Models\CustomField as Field;
 use mradang\LumenCustomField\Models\CustomFieldGroup as Group;
+use mradang\LumenCustomField\CustomFieldException as Exception;
 
 class FieldService {
 
@@ -67,10 +68,15 @@ class FieldService {
 
     public static function move($class, $id, $group_id) {
         $field = Field::findOrFail($id);
-        $group = Group::findOrFail($group_id);
+        if ($field->model !== $class) {
+            throw new Exception('非法参数');
+        }
 
-        if ($field->model !== $class || $group->model !== $class) {
-            throw new \Exception('非法参数');
+        if ($group_id) {
+            $group = Group::findOrFail($group_id);
+            if ($group->model !== $class) {
+                throw new Exception('非法参数');
+            }
         }
 
         // 检查目标组是否有同名字段
@@ -80,7 +86,7 @@ class FieldService {
             'name' => $field->name,
         ])->exists();
         if ($exists) {
-            throw new \Exception('目标分组下存在同名字段！');
+            throw new Exception('目标分组下存在同名字段！');
         }
 
         $field->group_id = $group_id;
