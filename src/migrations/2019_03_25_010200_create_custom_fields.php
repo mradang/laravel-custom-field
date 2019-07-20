@@ -21,6 +21,7 @@ class CreateCustomFields extends Migration
             $table->string('name'); // 字段名
             $table->unsignedTinyInteger('type'); // 字段类型（1文本，2选项，3时间，4图片）
             $table->text('options'); // 选项列表，JSON
+            $table->unsignedInteger('required'); // 是否必填（1必填，0选填）
             $table->unsignedInteger('sort'); // 排序
             $table->timestamps();
         });

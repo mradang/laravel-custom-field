@@ -16,6 +16,18 @@ class GroupService {
         return $group;
     }
 
+    public static function ensureExists($class, $name) {
+        $group = Group::firstOrNew([
+            'model' => $class,
+            'name' => $name,
+        ]);
+        if (!$group->exists) {
+            $group->sort = Group::where(['model' => $class])->max('sort') + 1;
+            $group->save();
+        }
+        return $group;
+    }
+
     public static function all($class) {
         return Group::where('model', $class)->orderBy('sort')->get();
     }

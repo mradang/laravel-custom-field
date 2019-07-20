@@ -21,6 +21,11 @@ trait CustomFieldTrait {
         return GroupService::create(__CLASS__, $name);
     }
 
+    // 确保字段分组存在
+    public static function customFieldGroupEnsureExists($name) {
+        return GroupService::ensureExists(__CLASS__, $name);
+    }
+
     // 更新字段分组
     public static function customFieldGroupUpdate($id, $name) {
         return GroupService::update(__CLASS__, $id, $name);
@@ -41,26 +46,33 @@ trait CustomFieldTrait {
         return FieldService::all(__CLASS__);
     }
 
+    // 按分组获取字段
+    public static function customFieldsByGroupId($group_id) {
+        return FieldService::getByGroupId(__CLASS__, $group_id);
+    }
+
     // 创建字段
-    public static function customFieldCreate($name, $type, array $options = [], $group_id = 0) {
+    public static function customFieldCreate($name, $type, array $options = [], $group_id = 0, $required = false) {
         return FieldService::create(
             __CLASS__,
             $group_id,
             $name,
             $type,
-            $options
+            $options,
+            $required
         );
     }
 
     // 修改字段
-    public static function customFieldUpdate($id, $name, $type, array $options = [], $group_id = 0) {
+    public static function customFieldUpdate($id, $name, $type, array $options = [], $group_id = 0, $required = false) {
         return FieldService::update(
             __CLASS__,
             $group_id,
             $id,
             $name,
             $type,
-            $options
+            $options,
+            $required
         );
     }
 

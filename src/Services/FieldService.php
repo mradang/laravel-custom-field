@@ -3,16 +3,18 @@
 namespace mradang\LumenCustomField\Services;
 
 use mradang\LumenCustomField\Models\CustomField as Field;
+use mradang\LumenCustomField\Models\CustomFieldGroup as Group;
 
 class FieldService {
 
-    public static function create($class, $group_id, $name, $type, $options) {
+    public static function create($class, $group_id, $name, $type, $options, $required) {
         $field = new Field([
             'model' => $class,
             'group_id' => $group_id,
             'name' => $name,
             'type' => $type,
             'options' => $options,
+            'required' => $required,
             'sort' => Field::where([
                 'model' => $class,
                 'group_id' => $group_id,
@@ -26,7 +28,14 @@ class FieldService {
         return Field::where('model', $class)->orderBy('sort')->get();
     }
 
-    public static function update($class, $group_id, $id, $name, $type, $options) {
+    public static function getByGroupId($class, $group_id) {
+        return Field::where([
+            'model' => $class,
+            'group_id' => $group_id,
+        ])->orderBy('sort')->get();
+    }
+
+    public static function update($class, $group_id, $id, $name, $type, $options, $required) {
         $field = Field::where([
             'model' => $class,
             'group_id' => $group_id,
@@ -36,6 +45,7 @@ class FieldService {
         $field->name = $name;
         $field->type = $type;
         $field->options = $options;
+        $field->required = $required;
 
         $field->save();
         return $field;
@@ -57,15 +67,29 @@ class FieldService {
 
     public static function move($class, $id, $group_id) {
         $field = Field::findOrFail($id);
-        if ($field->model === $class) {
-            $field->group_id = $group_id;
-            $field->sort = Field::where([
-                'model' => $class,
-                'group_id' => $group_id,
-            ])->max('sort') + 1;
-            $field->save();
-            return $field;
+        $group = Group::findOrFail($group_id);
+
+        if ($field->model !== $class || $group->model !== $class) {
+            throw new \Exception('非法参数');
         }
+
+        // 检查目标组是否有同名字段
+        $exists = Field::where([
+            'model' => $class,
+            'group_id' => $group_id,
+            'name' => $field->name,
+        ])->exists();
+        if ($exists) {
+            throw new \Exception('目标分组下存在同名字段！');
+        }
+
+        $field->group_id = $group_id;
+        $field->sort = Field::where([
+            'model' => $class,
+            'group_id' => $group_id,
+        ])->max('sort') + 1;
+        $field->save();
+        return $field;
     }
 
 }

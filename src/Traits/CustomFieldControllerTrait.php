@@ -9,13 +9,20 @@ trait CustomFieldControllerTrait {
 
     abstract protected function customFieldModel();
 
+    protected function customFieldExcludeGroups () {
+        return ['默认分组', '保留字段'];
+    }
+    protected function customFieldExcludeFields () {
+        return [];
+    }
+
     public function saveFieldGroup(Request $request) {
         $validatedData = $this->validate($request, [
             'id' => 'required|integer',
             'name' => [
                 'required',
                 'string',
-                'not_in:默认分组,保留字段',
+                'not_in:'.implode(',', $this->customFieldExcludeGroups()),
                 'name' => Rule::unique('custom_field_groups')->where(function ($query) {
                     $query->where('model', $this->customFieldModel());
                 })->ignore($request->input('id')),
@@ -55,11 +62,11 @@ trait CustomFieldControllerTrait {
 
     public function sortFieldGroups(Request $request) {
         $data = json_decode($request->getContent(), true);
-        $validator = validator(['sorts' => $data], [
-            'sorts.*.id' => 'required|integer|min:1',
-            'sorts.*.sort' => 'required|integer',
+        $validator = validator($data, [
+            '*.id' => 'required|integer|min:1',
+            '*.sort' => 'required|integer',
         ]);
-        $sorts = $validator->validate()['sorts'];
+        $sorts = $validator->validate();
         $this->customFieldModel()::customFieldGroupSaveSort($sorts);
     }
 
@@ -69,23 +76,31 @@ trait CustomFieldControllerTrait {
             'name' => [
                 'required',
                 'string',
-                Rule::unique('custom_fields')->where(function ($query) {
-                    $query->where('model', $this->customFieldModel());
+                'not_in:'.implode(',', $this->customFieldExcludeFields()),
+                Rule::unique('custom_fields')->where(function ($query) use ($request) {
+                    $query->where([
+                        'model' => $this->customFieldModel(),
+                        'group_id' => $request->input('group_id'),
+                    ]);
                 })->ignore($request->input('id')),
             ],
             'type' => 'required|integer|min:1',
             'options' => 'nullable|array',
             'group_id' => 'required|integer',
+            'required' => 'boolean',
         ], [
             'name.unique' => '字段名已存在',
         ]);
 
         extract($validatedData);
+        if (!isset($required)) {
+            $required = false;
+        }
 
         if ($id) {
-            return $this->customFieldModel()::customFieldUpdate($id, $name, $type, $options, $group_id);
+            return $this->customFieldModel()::customFieldUpdate($id, $name, $type, $options, $group_id, $required);
         } else {
-            return $this->customFieldModel()::customFieldCreate($name, $type, $options, $group_id);
+            return $this->customFieldModel()::customFieldCreate($name, $type, $options, $group_id, $required);
         }
     }
 
@@ -105,11 +120,11 @@ trait CustomFieldControllerTrait {
 
     public function sortFields(Request $request) {
         $data = json_decode($request->getContent(), true);
-        $validator = validator(['sorts' => $data], [
-            'sorts.*.id' => 'required|integer|min:1',
-            'sorts.*.sort' => 'required|integer',
+        $validator = validator($data, [
+            '*.id' => 'required|integer|min:1',
+            '*.sort' => 'required|integer',
         ]);
-        $sorts = $validator->validate()['sorts'];
+        $sorts = $validator->validate();
         $this->customFieldModel()::customFieldSaveSort($sorts);
     }
 

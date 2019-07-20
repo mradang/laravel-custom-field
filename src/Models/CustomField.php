@@ -12,11 +12,13 @@ class CustomField extends Model {
         'name',
         'type',
         'options',
+        'required',
         'sort',
     ];
 
     protected $casts = [
         'options' => 'array',
+        'required' => 'boolean',
     ];
 
     protected $hidden = ['model'];
