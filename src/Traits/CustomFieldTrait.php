@@ -3,6 +3,7 @@
 namespace mradang\LumenCustomField\Traits;
 
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Arr;
 
 use mradang\LumenCustomField\Services\ModelService;
 use mradang\LumenCustomField\Services\GroupService;
@@ -99,7 +100,7 @@ trait CustomFieldTrait {
             'values.*.value' => 'string',
         ]);
         $ret = $validator->validate();
-        return ValueService::save(__CLASS__, $this->getKey(), $ret['values']);
+        return ValueService::save(__CLASS__, $this->getKey(), Arr::get($ret, 'values', []));
     }
 
     // 保存单个定制字段数据
