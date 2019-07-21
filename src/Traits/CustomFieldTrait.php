@@ -128,6 +128,16 @@ trait CustomFieldTrait {
         return ValueService::get(__CLASS__, $this->getKey());
     }
 
+    // 多态关联字段值
+    public function customFieldValues() {
+        return $this->morphMany(
+            'mradang\LumenCustomField\Models\CustomFieldValue',
+            'fieldvaluetable',
+            'valuetable_type',
+            'valuetable_id'
+        )->select(['data', 'valuetable_type', 'valuetable_id']);
+    }
+
     public static function bootCustomFieldTrait() {
         static::deleting(function($model) {
             ValueService::delete(__CLASS__, $model->id);
