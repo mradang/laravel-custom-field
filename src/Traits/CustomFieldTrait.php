@@ -138,10 +138,9 @@ trait CustomFieldTrait {
         )->select(['data', 'valuetable_type', 'valuetable_id']);
     }
 
-    public static function bootCustomFieldTrait() {
-        static::deleting(function($model) {
-            ValueService::delete(__CLASS__, $model->id);
-        });
+    // 清理字段值
+    public function customFieldClearValues() {
+        ValueService::delete(__CLASS__, $this->getKey());
     }
 
 }

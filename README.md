@@ -178,6 +178,11 @@ $model->customFieldGetDataItem(int $field_id)
 array $model->customFieldData
 ```
 
+- 清理字段值
+```php
+$model->customFieldClearValues()
+```
+
 ## 异常
 - mradang\LumenCustomField\CustomFieldException
 
