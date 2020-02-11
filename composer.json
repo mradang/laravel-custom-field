@@ -1,6 +1,6 @@
 {
-    "name": "mradang/lumen-custom-field",
-    "description": "lumen-custom-field",
+    "name": "mradang/laravel-custom-field",
+    "description": "laravel-custom-field",
     "type": "library",
     "license": "MIT",
     "authors": [
@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "mradang\\LumenCustomField\\": "src"
+            "mradang\\LaravelCustomField\\": "src"
         }
     }
 }

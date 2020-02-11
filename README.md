@@ -1,23 +1,23 @@
-# lumen custom field
+# laravel custom field
 
 为模型增加字段定制功能
 
 ## 安装
 ```
-composer require mradang/lumen-custom-field
+composer require mradang/laravel-custom-field
 ```
 
 ## 配置
 1. 修改 bootstrap\app.php 文件
 ```php
 // 注册 ServiceProvider
-$app->register(mradang\LumenCustomField\LumenCustomFieldServiceProvider::class);
+$app->register(mradang\LaravelCustomField\LaravelCustomFieldServiceProvider::class);
 ```
 
 ## 控制器
 引入 CustomFieldControllerTrait
 ```php
-use mradang\LumenCustomField\Traits\CustomFieldControllerTrait;
+use mradang\LaravelCustomField\Traits\CustomFieldControllerTrait;
 ```
 
 - 获取定制模型类
@@ -90,7 +90,7 @@ moveField(Request $request)
 ## 模型
 引入 CustomFieldTrait
 ```php
-use mradang\LumenCustomField\Traits\CustomFieldTrait;
+use mradang\LaravelCustomField\Traits\CustomFieldTrait;
 ```
 
 - 获取字段分组
@@ -184,7 +184,7 @@ $model->customFieldClearValues()
 ```
 
 ## 异常
-- mradang\LumenCustomField\CustomFieldException
+- mradang\LaravelCustomField\CustomFieldException
 
 ## 添加的数据表迁移
 - custom_field_groups
