@@ -89,7 +89,7 @@ trait CustomFieldControllerTrait
                     ]);
                 })->ignore($request->input('id')),
             ],
-            'type' => 'required|integer|min:1',
+            'type' => 'required|in:1,2,3,4',
             'options' => 'nullable|array',
             'group_id' => 'required|integer',
             'required' => 'boolean',
@@ -98,9 +98,8 @@ trait CustomFieldControllerTrait
         ]);
 
         extract($validatedData);
-        if (!isset($required)) {
-            $required = false;
-        }
+        $required = $required ?? false;
+        $options = $options ?? [];
 
         if ($id) {
             return $this->customFieldModel()::customFieldUpdate($id, $name, $type, $options, $group_id, $required);
