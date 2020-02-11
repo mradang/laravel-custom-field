@@ -1,12 +1,13 @@
 <?php
 
-namespace mradang\LumenCustomField\Services;
+namespace mradang\LaravelCustomField\Services;
 
-use mradang\LumenCustomField\Models\CustomFieldValue as FieldValue;
+use mradang\LaravelCustomField\Models\CustomFieldValue as FieldValue;
 
-class ValueService {
-
-    public static function save($class, $key, array $data) {
+class CustomFieldValueService
+{
+    public static function save($class, $key, array $data)
+    {
         $value = FieldValue::firstOrNew([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
@@ -16,7 +17,8 @@ class ValueService {
         return $value;
     }
 
-    public static function saveItem($class, $key, array $item) {
+    public static function saveItem($class, $key, array $item)
+    {
         $value = FieldValue::firstOrNew([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
@@ -39,7 +41,8 @@ class ValueService {
         return $value;
     }
 
-    public static function getItem($class, $key, $field_id) {
+    public static function getItem($class, $key, $field_id)
+    {
         $value = FieldValue::firstOrNew([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
@@ -56,7 +59,8 @@ class ValueService {
         return $pos === -1 ? null : $data[$pos]['value'];
     }
 
-    public static function get($class, $key) {
+    public static function get($class, $key)
+    {
         $value = FieldValue::where([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
@@ -64,11 +68,11 @@ class ValueService {
         return $value ? $value->data : [];
     }
 
-    public static function delete($class, $key) {
+    public static function delete($class, $key)
+    {
         FieldValue::where([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
         ])->delete();
     }
-
 }

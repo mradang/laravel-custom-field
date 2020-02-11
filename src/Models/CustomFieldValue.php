@@ -1,11 +1,11 @@
 <?php
 
-namespace mradang\LumenCustomField\Models;
+namespace mradang\LaravelCustomField\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CustomFieldValue extends Model {
-
+class CustomFieldValue extends Model
+{
     protected $fillable = [
         'valuetable_type',
         'valuetable_id',
@@ -21,8 +21,8 @@ class CustomFieldValue extends Model {
         'data' => 'array',
     ];
 
-    public function fieldvaluetable() {
+    public function fieldvaluetable()
+    {
         return $this->morphTo();
     }
-
 }

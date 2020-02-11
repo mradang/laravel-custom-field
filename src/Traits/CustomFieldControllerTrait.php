@@ -1,28 +1,31 @@
 <?php
 
-namespace mradang\LumenCustomField\Traits;
+namespace mradang\LaravelCustomField\Traits;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-trait CustomFieldControllerTrait {
-
+trait CustomFieldControllerTrait
+{
     abstract protected function customFieldModel();
 
-    protected function customFieldExcludeGroups () {
+    protected function customFieldExcludeGroups()
+    {
         return ['默认分组', '保留字段'];
     }
-    protected function customFieldExcludeFields () {
+    protected function customFieldExcludeFields()
+    {
         return [];
     }
 
-    public function saveFieldGroup(Request $request) {
-        $validatedData = $this->validate($request, [
+    public function saveFieldGroup(Request $request)
+    {
+        $validatedData = $request->validate([
             'id' => 'required|integer',
             'name' => [
                 'required',
                 'string',
-                'not_in:'.implode(',', $this->customFieldExcludeGroups()),
+                'not_in:' . implode(',', $this->customFieldExcludeGroups()),
                 'name' => Rule::unique('custom_field_groups')->where(function ($query) {
                     $query->where('model', $this->customFieldModel());
                 })->ignore($request->input('id')),
@@ -42,12 +45,14 @@ trait CustomFieldControllerTrait {
         }
     }
 
-    public function getFieldGroups() {
+    public function getFieldGroups()
+    {
         return $this->customFieldModel()::customFieldGroups();
     }
 
-    public function deleteFieldGroup(Request $request) {
-        $validatedData = $this->validate($request, [
+    public function deleteFieldGroup(Request $request)
+    {
+        $validatedData = $request->validate([
             'id' => 'required|integer',
         ]);
 
@@ -60,23 +65,23 @@ trait CustomFieldControllerTrait {
         }
     }
 
-    public function sortFieldGroups(Request $request) {
-        $data = json_decode($request->getContent(), true);
-        $validator = validator($data, [
+    public function sortFieldGroups(Request $request)
+    {
+        $validatedData = $request->validate([
             '*.id' => 'required|integer|min:1',
             '*.sort' => 'required|integer',
         ]);
-        $sorts = $validator->validate();
-        $this->customFieldModel()::customFieldGroupSaveSort($sorts);
+        $this->customFieldModel()::customFieldGroupSaveSort($validatedData);
     }
 
-    public function saveField(Request $request) {
-        $validatedData = $this->validate($request, [
+    public function saveField(Request $request)
+    {
+        $validatedData = $request->validate([
             'id' => 'required|integer',
             'name' => [
                 'required',
                 'string',
-                'not_in:'.implode(',', $this->customFieldExcludeFields()),
+                'not_in:' . implode(',', $this->customFieldExcludeFields()),
                 Rule::unique('custom_fields')->where(function ($query) use ($request) {
                     $query->where([
                         'model' => $this->customFieldModel(),
@@ -104,12 +109,14 @@ trait CustomFieldControllerTrait {
         }
     }
 
-    public function getFields() {
+    public function getFields()
+    {
         return $this->customFieldModel()::customFields();
     }
 
-    public function deleteField(Request $request) {
-        $validatedData = $this->validate($request, [
+    public function deleteField(Request $request)
+    {
+        $validatedData = $request->validate([
             'id' => 'required|integer',
         ]);
 
@@ -118,18 +125,18 @@ trait CustomFieldControllerTrait {
         $this->customFieldModel()::customFieldDelete($id);
     }
 
-    public function sortFields(Request $request) {
-        $data = json_decode($request->getContent(), true);
-        $validator = validator($data, [
+    public function sortFields(Request $request)
+    {
+        $validatedData = $request->validate([
             '*.id' => 'required|integer|min:1',
             '*.sort' => 'required|integer',
         ]);
-        $sorts = $validator->validate();
-        $this->customFieldModel()::customFieldSaveSort($sorts);
+        $this->customFieldModel()::customFieldSaveSort($validatedData);
     }
 
-    public function moveField(Request $request) {
-        $validatedData = $this->validate($request, [
+    public function moveField(Request $request)
+    {
+        $validatedData = $request->validate([
             'id' => 'required|integer',
             'group_id' => 'required|integer',
         ]);
@@ -138,5 +145,4 @@ trait CustomFieldControllerTrait {
 
         return $this->customFieldModel()::customFieldMove($id, $group_id);
     }
-
 }

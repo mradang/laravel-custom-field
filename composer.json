@@ -9,9 +9,19 @@
             "email": "mradang@163.com"
         }
     ],
+    "require": {
+        "laravel/framework": "~6.0"
+    },
     "autoload": {
         "psr-4": {
             "mradang\\LaravelCustomField\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "mradang\\LaravelCustomField\\LaravelCustomFieldServiceProvider"
+            ]
         }
     }
 }

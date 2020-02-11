@@ -1,13 +1,14 @@
 <?php
 
-namespace mradang\LumenCustomField\Services;
+namespace mradang\LaravelCustomField\Services;
 
-use mradang\LumenCustomField\Models\CustomFieldGroup as Group;
-use mradang\LumenCustomField\CustomFieldException as Exception;
+use mradang\LaravelCustomField\Models\CustomFieldGroup as Group;
+use mradang\LaravelCustomField\Exceptions\CustomFieldException as Exception;
 
-class GroupService {
-
-    public static function create($class, $name) {
+class CustomFieldGroupService
+{
+    public static function create($class, $name)
+    {
         $group = new Group([
             'model' => $class,
             'name' => $name,
@@ -17,7 +18,8 @@ class GroupService {
         return $group;
     }
 
-    public static function ensureExists($class, $name) {
+    public static function ensureExists($class, $name)
+    {
         $group = Group::firstOrNew([
             'model' => $class,
             'name' => $name,
@@ -29,11 +31,13 @@ class GroupService {
         return $group;
     }
 
-    public static function all($class) {
+    public static function all($class)
+    {
         return Group::where('model', $class)->orderBy('sort')->get();
     }
 
-    public static function update($class, $id, $name) {
+    public static function update($class, $id, $name)
+    {
         $group = Group::findOrFail($id);
         if ($group->model === $class) {
             $group->name = $name;
@@ -42,7 +46,8 @@ class GroupService {
         }
     }
 
-    public static function delete($class, $id) {
+    public static function delete($class, $id)
+    {
         $group = Group::withCount('fields')->findOrFail($id);
         if ($group->fields_count) {
             throw new Exception('分组下存在字段，不能删除！');
@@ -53,10 +58,10 @@ class GroupService {
     }
 
     // 保存排序值，data中的项目需要2个属性：id, sort
-    public static function saveSort(array $data) {
+    public static function saveSort(array $data)
+    {
         foreach ($data as $item) {
             Group::where('id', $item['id'])->update(['sort' => $item['sort']]);
         }
     }
-
 }
