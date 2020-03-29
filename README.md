@@ -3,6 +3,7 @@
 为模型增加字段定制功能
 
 ## 安装
+
 ```
 composer require mradang/laravel-custom-field
 ```
@@ -10,6 +11,7 @@ composer require mradang/laravel-custom-field
 ## 添加的内容
 
 ### 添加的数据表迁移
+
 - custom_field_groups
 - custom_fields
 - custom_field_values
@@ -17,6 +19,7 @@ composer require mradang/laravel-custom-field
 ## 定制字段功能
 
 ### 控制器 Trait
+
 ```php
 use mradang\LaravelCustomField\Traits\CustomFieldControllerTrait;
 ```
@@ -51,11 +54,13 @@ moveField(Request $request) // [id, group_id]
 ```
 
 ### 模型 Trait
+
 ```php
 use mradang\LaravelCustomField\Traits\CustomFieldTrait;
 ```
 
 增加以下内容
+
 ```php
 // 获取字段分组
 Model::customFieldGroups()
@@ -96,9 +101,11 @@ $model->customFieldClearValues()
 ```
 
 ### 异常
+
 - mradang\LaravelCustomField\Exceptions\CustomFieldException
 
 ### 根据需要增加路由
+
 ```php
 Route::post('getFieldGroups', 'XXXXController@getFieldGroups');
 Route::post('getFields', 'XXXXController@getFields');
@@ -110,4 +117,16 @@ Route::post('saveField', 'XXXXController@saveField');
 Route::post('deleteField', 'XXXXController@deleteField');
 Route::post('sortFields', 'XXXXController@sortFields');
 Route::post('moveField', 'XXXXController@moveField');
+```
+
+### 模型删除时自动清理定制字段值
+
+```php
+protected static function boot()
+{
+    parent::boot();
+    static::deleting(function ($model) {
+        $model->customFieldClearValues();
+    });
+}
 ```
