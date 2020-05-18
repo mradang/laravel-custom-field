@@ -80,10 +80,13 @@ trait CustomFieldControllerTrait
                 'string',
                 'not_in:' . implode(',', $this->customFieldModel()::customFieldBaseFields()),
                 Rule::unique('custom_fields')->where(function ($query) use ($request) {
-                    $query->where([
+                    $params = [
                         'model' => $this->customFieldModel(),
-                        'group_id' => $request->input('group_id'),
-                    ]);
+                    ];
+                    if (!$this->customFieldModel()::customFieldGloballyUnique()) {
+                        $params['group_id'] = $request->input('group_id');
+                    }
+                    $query->where($params);
                 })->ignore($request->input('id')),
             ],
             'type' => 'required|in:1,2,3,4',

@@ -23,6 +23,12 @@ trait CustomFieldTrait
         ];
     }
 
+    // 定制字段名在所有组中唯一
+    protected static function customFieldGloballyUnique(): bool
+    {
+        return false;
+    }
+
     // 获取字段分组
     public static function customFieldGroups()
     {
