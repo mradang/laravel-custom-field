@@ -66,6 +66,8 @@ use mradang\LaravelCustomField\Traits\CustomFieldTrait;
 Model::customFieldBaseFields() // [field => label, ...]
 // 模型基本分组信息
 Model::customFieldBaseGroups() // [base => '基本组名', default => '默认组名']
+// 定制字段名在所有组中唯一
+Model::customFieldGloballyUnique(): bool // false
 // 获取字段分组
 Model::customFieldGroups()
 // 创建字段分组
