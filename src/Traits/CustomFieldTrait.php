@@ -8,6 +8,21 @@ use mradang\LaravelCustomField\Services\CustomFieldValueService as ValueService;
 
 trait CustomFieldTrait
 {
+    // 模型基本字段定义（[field:label, ...])
+    protected static function customFieldBaseFields(): array
+    {
+        return [];
+    }
+
+    // 模型保留字段组（支持的键值：base, default）
+    protected static function customFieldBaseGroups(): array
+    {
+        return [
+            'base' => '保留字段',
+            'default' => '默认分组',
+        ];
+    }
+
     // 获取字段分组
     public static function customFieldGroups()
     {

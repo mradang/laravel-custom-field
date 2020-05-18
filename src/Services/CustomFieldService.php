@@ -4,7 +4,6 @@ namespace mradang\LaravelCustomField\Services;
 
 use mradang\LaravelCustomField\Models\CustomField as Field;
 use mradang\LaravelCustomField\Models\CustomFieldGroup as Group;
-use mradang\LaravelCustomField\Exceptions\CustomFieldException as Exception;
 
 class CustomFieldService
 {
@@ -76,13 +75,13 @@ class CustomFieldService
     {
         $field = Field::findOrFail($id);
         if ($field->model !== $class) {
-            throw new Exception('非法参数');
+            abort(400, '非法参数');
         }
 
         if ($group_id) {
             $group = Group::findOrFail($group_id);
             if ($group->model !== $class) {
-                throw new Exception('非法参数');
+                abort(400, '非法参数');
             }
         }
 
@@ -93,7 +92,7 @@ class CustomFieldService
             'name' => $field->name,
         ])->exists();
         if ($exists) {
-            throw new Exception('目标分组下存在同名字段！');
+            abort(400, '目标分组下存在同名字段！');
         }
 
         $field->group_id = $group_id;

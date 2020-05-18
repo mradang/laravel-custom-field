@@ -28,11 +28,11 @@ use mradang\LaravelCustomField\Traits\CustomFieldControllerTrait;
 
 ```php
 // 获取定制模型类
-abstract protected function customFieldModel();
-// 保留字段分组名（array）
-protected function customFieldExcludeGroups();
-// 保留字段名（array）
-protected function customFieldExcludeFields();
+abstract protected function customFieldModel()
+// 获取基本字段
+getBaseFields()
+// 获取基本分组信息
+getBaseGroups()
 // 保存字段分组
 saveFieldGroup(Request $request) // [id, name]
 // 获取字段分组
@@ -62,6 +62,10 @@ use mradang\LaravelCustomField\Traits\CustomFieldTrait;
 增加以下内容
 
 ```php
+// 模型基本字段定义
+Model::customFieldBaseFields() // [field => label, ...]
+// 模型基本分组信息
+Model::customFieldBaseGroups() // [base => '基本组名', default => '默认组名']
 // 获取字段分组
 Model::customFieldGroups()
 // 创建字段分组
@@ -100,13 +104,11 @@ array $model->customFieldData
 $model->customFieldClearValues()
 ```
 
-### 异常
-
-- mradang\LaravelCustomField\Exceptions\CustomFieldException
-
 ### 根据需要增加路由
 
 ```php
+Route::post('getBaseFields', 'XXXXController@getBaseFields');
+Route::post('getBaseGroups', 'XXXXController@getBaseGroups');
 Route::post('getFieldGroups', 'XXXXController@getFieldGroups');
 Route::post('getFields', 'XXXXController@getFields');
 

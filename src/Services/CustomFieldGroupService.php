@@ -3,7 +3,6 @@
 namespace mradang\LaravelCustomField\Services;
 
 use mradang\LaravelCustomField\Models\CustomFieldGroup as Group;
-use mradang\LaravelCustomField\Exceptions\CustomFieldException as Exception;
 
 class CustomFieldGroupService
 {
@@ -50,7 +49,7 @@ class CustomFieldGroupService
     {
         $group = Group::withCount('fields')->findOrFail($id);
         if ($group->fields_count) {
-            throw new Exception('分组下存在字段，不能删除！');
+            abort(400, '分组下存在字段，不能删除！');
         }
         if ($group->model === $class) {
             return $group->delete();

@@ -9,13 +9,14 @@ trait CustomFieldControllerTrait
 {
     abstract protected function customFieldModel();
 
-    protected function customFieldExcludeGroups()
+    public function getBaseFields()
     {
-        return ['默认分组', '保留字段'];
+        return $this->customFieldModel()::customFieldBaseFields();
     }
-    protected function customFieldExcludeFields()
+
+    public function getBaseGroups()
     {
-        return [];
+        return $this->customFieldModel()::customFieldBaseGroups();
     }
 
     public function saveFieldGroup(Request $request)
@@ -25,7 +26,7 @@ trait CustomFieldControllerTrait
             'name' => [
                 'required',
                 'string',
-                'not_in:' . implode(',', $this->customFieldExcludeGroups()),
+                'not_in:' . implode(',', $this->customFieldModel()::customFieldExcludeGroups()),
                 'name' => Rule::unique('custom_field_groups')->where(function ($query) {
                     $query->where('model', $this->customFieldModel());
                 })->ignore($request->input('id')),
@@ -58,11 +59,7 @@ trait CustomFieldControllerTrait
 
         extract($validatedData);
 
-        try {
-            $this->customFieldModel()::customFieldGroupDelete($id);
-        } catch (\Exception $e) {
-            return response($e->getMessage(), 400);
-        }
+        $this->customFieldModel()::customFieldGroupDelete($id);
     }
 
     public function sortFieldGroups(Request $request)
@@ -81,7 +78,7 @@ trait CustomFieldControllerTrait
             'name' => [
                 'required',
                 'string',
-                'not_in:' . implode(',', $this->customFieldExcludeFields()),
+                'not_in:' . implode(',', $this->customFieldModel()::customFieldBaseFields()),
                 Rule::unique('custom_fields')->where(function ($query) use ($request) {
                     $query->where([
                         'model' => $this->customFieldModel(),
