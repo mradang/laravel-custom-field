@@ -83,7 +83,7 @@ Model::customFieldGroupSaveSort(array $data)
 // 获取字段
 Model::customFields()
 // 按分组获取字段
-Model::customFieldsByGroupId($id, $name)
+Model::customFieldsByGroupId($id)
 // 创建字段
 Model::customFieldCreate($name, $type, array $options = [], $group_id = 0)
 // 修改字段
