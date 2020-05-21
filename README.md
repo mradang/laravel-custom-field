@@ -106,6 +106,9 @@ array $model->customFieldData
 $model->customFieldClearValues()
 ```
 
+关联关系
+- customFieldValues
+
 ### 根据需要增加路由
 
 ```php
