@@ -89,7 +89,7 @@ trait CustomFieldControllerTrait
                     $query->where($params);
                 })->ignore($request->input('id')),
             ],
-            'type' => 'required|in:1,2,3,4',
+            'type' => 'required|integer',
             'options' => 'nullable|array',
             'group_id' => 'required|integer',
             'required' => 'boolean',
