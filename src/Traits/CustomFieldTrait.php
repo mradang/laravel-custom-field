@@ -128,7 +128,7 @@ trait CustomFieldTrait
     {
         $validator = validator($data, [
             '*.field_id' => 'required|integer|min:1',
-            '*.value' => 'nullable|string',
+            '*.value' => 'nullable',
         ]);
         $ret = $validator->validate();
         return ValueService::save(__CLASS__, $this->getKey(), $ret);
@@ -139,7 +139,7 @@ trait CustomFieldTrait
     {
         $validator = validator(compact('field_id', 'value'), [
             'field_id' => 'required|integer|min:1',
-            'value' => 'nullable|string',
+            'value' => 'nullable',
         ]);
         $ret = $validator->validate();
         return ValueService::saveItem(__CLASS__, $this->getKey(), $ret);
