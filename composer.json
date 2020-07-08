@@ -10,11 +10,16 @@
         }
     ],
     "require": {
-        "laravel/framework": "~6.0"
+        "laravel/framework": "~6.0|~7.0"
     },
     "autoload": {
         "psr-4": {
             "mradang\\LaravelCustomField\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
         }
     },
     "extra": {
@@ -23,5 +28,9 @@
                 "mradang\\LaravelCustomField\\LaravelCustomFieldServiceProvider"
             ]
         }
+    },
+    "require-dev": {
+        "orchestra/testbench": "^5.3",
+        "phpunit/phpunit": "^9.2"
     }
 }
