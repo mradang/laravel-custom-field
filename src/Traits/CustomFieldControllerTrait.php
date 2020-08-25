@@ -113,6 +113,15 @@ trait CustomFieldControllerTrait
         return $this->customFieldModel()::customFields();
     }
 
+    public function getFieldsByGroupId(Request $request)
+    {
+        $validatedData = $request->validate([
+            'group_id' => 'required|integer',
+        ]);
+
+        return $this->customFieldModel()::customFieldsByGroupId($request->group_id);
+    }
+
     public function deleteField(Request $request)
     {
         $validatedData = $request->validate([
