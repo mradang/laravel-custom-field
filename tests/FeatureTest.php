@@ -2,8 +2,6 @@
 
 namespace Tests;
 
-use GuzzleHttp\Client;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
@@ -89,6 +87,37 @@ class FeatureTest extends TestCase
 
         $user1->customFieldClearValues();
         $this->assertSame([], $user1->customFieldData);
+
+        // 控制器
+        $this->app['router']->post('getBaseFields', [UserController::class, 'getBaseFields']);
+        $res = $this->json('POST', 'getBaseFields');
+        $res->assertJson([
+            'name' => '姓名',
+            'phone' => '手机',
+        ]);
+
+        $this->app['router']->post('saveFieldGroup', [UserController::class, 'saveFieldGroup']);
+        $res = $this->json('POST', 'saveFieldGroup', [
+            'id' => $group2->id,
+            'name' => '基本字段',
+        ]);
+        $res->assertStatus(422);
+
+        $res = $this->json('POST', 'saveFieldGroup', [
+            'id' => $group2->id,
+            'name' => '家庭信息update2',
+        ]);
+        $res->assertStatus(200)
+            ->assertJson([
+                'name' => '家庭信息update2'
+            ]);
+
+        $this->app['router']->post('getFieldGroups', [UserController::class, 'getFieldGroups']);
+        $res = $this->post('getFieldGroups');
+        $res->assertJson([
+            ['name' => '基本信息'],
+            ['name' => '家庭信息update2'],
+        ]);
     }
 
     protected function getQueryLog(\Closure $callback): \Illuminate\Support\Collection

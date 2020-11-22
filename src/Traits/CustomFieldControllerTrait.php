@@ -26,7 +26,7 @@ trait CustomFieldControllerTrait
             'name' => [
                 'required',
                 'string',
-                'not_in:' . implode(',', $this->customFieldModel()::customFieldExcludeGroups()),
+                'not_in:' . implode(',', $this->customFieldModel()::customFieldBaseGroups()),
                 'name' => Rule::unique('custom_field_groups')->where(function ($query) {
                     $query->where('model', $this->customFieldModel());
                 })->ignore($request->input('id')),
