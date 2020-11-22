@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace mradang\LaravelCustomField\Test;
 
 use mradang\LaravelCustomField\LaravelCustomFieldServiceProvider;
 

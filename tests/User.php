@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace mradang\LaravelCustomField\Test;
 
 use Illuminate\Database\Eloquent\Model;
 use mradang\LaravelCustomField\Traits\CustomFieldTrait;

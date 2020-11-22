@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace mradang\LaravelCustomField\Test;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +12,9 @@ class FeatureTest extends TestCase
         parent::setUp();
     }
 
+    /**
+     * @covers CustomFieldTrait::customFieldGroupCreate
+     */
     public function testBasicFeatures()
     {
         // 字段分组
