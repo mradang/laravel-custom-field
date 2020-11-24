@@ -35,6 +35,12 @@ trait CustomFieldTrait
         return GroupService::all(__CLASS__);
     }
 
+    // 获取字段分组带字段
+    public static function customFieldGroupsWithFields($group_id)
+    {
+        return GroupService::allWithFields(__CLASS__, $group_id);
+    }
+
     // 创建字段分组
     public static function customFieldGroupCreate($name)
     {

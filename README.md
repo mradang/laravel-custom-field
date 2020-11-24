@@ -37,6 +37,8 @@ getBaseGroups()
 saveFieldGroup(Request $request) // [id, name]
 // 获取字段分组
 getFieldGroups()
+// 获取字段分组带字段
+getFieldGroupsWithFields() // [ids]
 // 删除字段分组
 deleteFieldGroup(Request $request) // [id]
 // 字段分组排序
@@ -70,6 +72,8 @@ Model::customFieldBaseGroups() // [base => '基本组名', default => '默认组
 Model::customFieldGloballyUnique(): bool // false
 // 获取字段分组
 Model::customFieldGroups()
+// 获取字段分组带字段
+Model::customFieldGroupsWithFields($group_id)
 // 创建字段分组
 Model::customFieldGroupCreate($name)
 // 确保字段分组存在

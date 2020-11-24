@@ -35,6 +35,17 @@ class CustomFieldGroupService
         return Group::where('model', $class)->orderBy('sort')->get();
     }
 
+    public static function allWithFields($class, $group_id)
+    {
+        $query = Group::where('model', $class);
+        if (\is_array($group_id)) {
+            $query->whereIn('id', $group_id);
+        } else {
+            $query->where('id', $group_id);
+        }
+        return $query->with('fields')->get();
+    }
+
     public static function update($class, $id, $name)
     {
         $group = Group::findOrFail($id);

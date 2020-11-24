@@ -51,6 +51,15 @@ trait CustomFieldControllerTrait
         return $this->customFieldModel()::customFieldGroups();
     }
 
+    public function getFieldGroupsWithFields(Request $request)
+    {
+        $validatedData = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'required|integer',
+        ]);
+        return $this->customFieldModel()::customFieldGroupsWithFields($validatedData['ids']);
+    }
+
     public function deleteFieldGroup(Request $request)
     {
         $validatedData = $request->validate([
