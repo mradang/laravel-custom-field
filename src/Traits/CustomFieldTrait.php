@@ -29,6 +29,12 @@ trait CustomFieldTrait
         return false;
     }
 
+    // 定制字段在指定组内唯一（默认是字段所在的组内唯一）
+    protected static function customFieldUniqueWithinGroupIds($group_id): array
+    {
+        return [$group_id];
+    }
+
     // 获取字段分组
     public static function customFieldGroups()
     {

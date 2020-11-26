@@ -70,6 +70,8 @@ Model::customFieldBaseFields() // [field => label, ...]
 Model::customFieldBaseGroups() // [base => '基本组名', default => '默认组名']
 // 定制字段名在所有组中唯一
 Model::customFieldGloballyUnique(): bool // false
+// 定制字段在指定组内唯一（默认是字段所在的组内唯一）
+Model::customFieldUniqueWithinGroupIds($group_id): array // [$group_id]
 // 获取字段分组
 Model::customFieldGroups()
 // 获取字段分组带字段
