@@ -43,7 +43,9 @@ class CustomFieldGroupService
         } else {
             $query->where('id', $group_id);
         }
-        return $query->with('fields')->get();
+        return $query->with(['fields' => function($query) {
+            $query->orderBy('sort');
+        }])->get();
     }
 
     public static function update($class, $id, $name)
