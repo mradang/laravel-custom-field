@@ -45,7 +45,7 @@ class CustomFieldGroupService
         }
         return $query->with(['fields' => function($query) {
             $query->orderBy('sort');
-        }])->get();
+        }])->orderBy('sort')->get();
     }
 
     public static function update($class, $id, $name)
