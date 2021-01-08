@@ -23,18 +23,10 @@ trait CustomFieldControllerTrait
     {
         $validatedData = $request->validate([
             'id' => 'required|integer',
-            'name' => [
-                'required',
-                'string',
-                'not_in:' . implode(',', $this->customFieldModel()::customFieldBaseGroups()),
-                'name' => Rule::unique('custom_field_groups')->where(function ($query) {
-                    $query->where('model', $this->customFieldModel());
-                })->ignore($request->input('id')),
-            ],
+            'name' => 'required|string|not_in:' . implode(',', $this->customFieldModel()::customFieldBaseGroups()),
         ], [
             'name.not_in' => '分组名无效',
             'name.required' => '分组名必填',
-            'name.unique' => '分组名已存在',
         ]);
 
         extract($validatedData);
