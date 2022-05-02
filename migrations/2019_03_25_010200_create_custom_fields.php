@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCustomFields extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class CreateCustomFields extends Migration
     {
         // 定制字段表
         Schema::create('custom_fields', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('model'); // 模型名
             $table->unsignedInteger('group_id'); // 字段分组 ID
             $table->string('name'); // 字段名
@@ -36,4 +36,4 @@ class CreateCustomFields extends Migration
     {
         Schema::dropIfExists('custom_fields');
     }
-}
+};

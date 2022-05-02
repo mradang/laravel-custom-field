@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCustomFieldGroups extends Migration
+return new class extends Migration
 {
     /**
      * Run the migrations.
@@ -15,7 +15,7 @@ class CreateCustomFieldGroups extends Migration
     {
         // 定制字段分组表
         Schema::create('custom_field_groups', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('model'); // 模型名
             $table->string('name'); // 分组名
             $table->unsignedInteger('sort'); // 排序
@@ -32,4 +32,4 @@ class CreateCustomFieldGroups extends Migration
     {
         Schema::dropIfExists('custom_field_groups');
     }
-}
+};
