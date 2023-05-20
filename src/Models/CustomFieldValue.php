@@ -9,6 +9,7 @@ class CustomFieldValue extends Model
     protected $fillable = [
         'valuetable_type',
         'valuetable_id',
+        'no',
         'data',
     ];
 
@@ -19,6 +20,10 @@ class CustomFieldValue extends Model
 
     protected $casts = [
         'data' => 'array',
+    ];
+
+    protected $attributes = [
+        'data' => '[]',
     ];
 
     public function fieldvaluetable()

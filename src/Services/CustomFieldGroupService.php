@@ -43,7 +43,7 @@ class CustomFieldGroupService
         } else {
             $query->where('id', $group_id);
         }
-        return $query->with(['fields' => function($query) {
+        return $query->with(['fields' => function ($query) {
             $query->orderBy('sort');
         }])->orderBy('sort')->get();
     }

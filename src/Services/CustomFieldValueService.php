@@ -2,6 +2,7 @@
 
 namespace mradang\LaravelCustomField\Services;
 
+use Illuminate\Support\Arr;
 use mradang\LaravelCustomField\Models\CustomFieldValue as FieldValue;
 use Illuminate\Support\Str;
 
@@ -9,26 +10,35 @@ class CustomFieldValueService
 {
     public static function save($class, $key, array $data)
     {
-        $value = FieldValue::firstOrNew([
+        $value = FieldValue::orderByDesc('no')->firstOrNew([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
         ]);
-        $diff = self::diff($value->data ?? [], $data);
-        $value->data = $data;
-        $value->save();
+
+        $diff = self::diff($value->data, $data);
+
+        FieldValue::create([
+            'valuetable_type' => $class,
+            'valuetable_id' => $key,
+            'no' => ($value->no ?: 0) + 1,
+            'data' => $data,
+        ]);
+
         return $diff;
     }
 
     private static function diff(array $old, array $new)
     {
-        $new_values = collect($new)->map(function ($item) {
+        $new_values = collect($new)->mapWithKeys(function ($item) {
             return ['field' . $item['field_id'] => $item['value']];
-        })->collapse();
-        $old_values = collect($old)->map(function ($item) {
+        });
+        $old_values = collect($old)->mapWithKeys(function ($item) {
             return ['field' . $item['field_id'] => $item['value']];
-        })->collapse();
+        });
+
         $diff = $new_values->diffAssoc($old_values);
-        return $diff->map(function($value, $key) use ($old_values) {
+
+        return $diff->map(function ($value, $key) use ($old_values) {
             return [
                 'field_id' => Str::after($key, 'field'),
                 'old_value' => $old_values->get($key),
@@ -39,53 +49,48 @@ class CustomFieldValueService
 
     public static function saveItem($class, $key, array $item)
     {
-        $value = FieldValue::firstOrNew([
+        $value = FieldValue::orderByDesc('no')->firstOrNew([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
         ]);
 
-        $data = $value->data ?: [];
-        $pos = -1;
-        foreach ($data as $index => $row) {
-            if ($row['field_id'] === $item['field_id']) {
-                $data[$index] = $item;
-                $pos = $index;
-            }
-        }
-        if ($pos === -1) {
+        $data = $value->data;
+        $pos = collect($data)->search(fn ($row) => $row['field_id'] === $item['field_id']);
+
+        if ($pos === false) {
             $data[] = $item;
+        } else {
+            $data[$pos] = $item;
         }
 
-        $value->data = $data;
-        $value->save();
-        return $value;
+        return FieldValue::create([
+            'valuetable_type' => $class,
+            'valuetable_id' => $key,
+            'no' => ($value->no ?: 0) + 1,
+            'data' => $data,
+        ]);
     }
 
     public static function getItem($class, $key, $field_id)
     {
-        $value = FieldValue::firstOrNew([
+        $value = FieldValue::orderByDesc('no')->firstOrNew([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
         ]);
 
-        $data = $value->data ?: [];
-        $pos = -1;
-        foreach ($data as $index => $row) {
-            if ($row['field_id'] === $field_id) {
-                $pos = $index;
-                break;
-            }
-        }
-        return $pos === -1 ? null : $data[$pos]['value'];
+        $row = collect($value->data)->firstWhere('field_id', $field_id);
+
+        return Arr::get($row, 'value');
     }
 
     public static function get($class, $key)
     {
-        $value = FieldValue::where([
+        $value = FieldValue::orderByDesc('no')->firstOrNew([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
-        ])->first();
-        return $value ? $value->data : [];
+        ]);
+
+        return $value->data;
     }
 
     public static function delete($class, $key)

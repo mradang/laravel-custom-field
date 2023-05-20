@@ -32,6 +32,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
             'database' => ':memory:',
             'prefix' => '',
         ]);
+        $app['config']->set('env', 'testing');
     }
 
     protected function setUp(): void

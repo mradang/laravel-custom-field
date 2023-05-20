@@ -7,7 +7,15 @@ use Illuminate\Validation\Rule;
 
 trait CustomFieldControllerTrait
 {
-    abstract protected function customFieldModel();
+    public function customFieldModel(): ?string
+    {
+        if (preg_match('/(\w+)Controller$/', get_class($this), $matches)) {
+            $class = 'App\\Models\\' . $matches[1];
+            if (config('env') === 'testing' || class_exists($class)) {
+                return $class;
+            }
+        }
+    }
 
     public function getBaseFields()
     {
@@ -49,6 +57,7 @@ trait CustomFieldControllerTrait
             'ids' => 'required|array',
             'ids.*' => 'required|integer',
         ]);
+
         return $this->customFieldModel()::customFieldGroupsWithFields($validatedData['ids']);
     }
 

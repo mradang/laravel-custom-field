@@ -14,6 +14,6 @@ class CustomFieldGroup extends Model
 
     public function fields()
     {
-        return $this->hasMany('mradang\LaravelCustomField\Models\CustomField', 'group_id');
+        return $this->hasMany(CustomField::class, 'group_id');
     }
 }

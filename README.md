@@ -27,8 +27,8 @@ use mradang\LaravelCustomField\Traits\CustomFieldControllerTrait;
 增加以下内容：
 
 ```php
-// 获取定制模型类
-abstract protected function customFieldModel()
+// 指定定制模型类（未重载该函数时，默认使用控制器同名模型）
+customFieldModel()
 // 获取基本字段
 getBaseFields()
 // 获取基本分组信息

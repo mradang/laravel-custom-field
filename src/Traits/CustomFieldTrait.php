@@ -182,7 +182,9 @@ trait CustomFieldTrait
             'fieldvaluetable',
             'valuetable_type',
             'valuetable_id'
-        )->select(['data', 'valuetable_type', 'valuetable_id']);
+        )
+            ->select(['no', 'data', 'updated_at', 'valuetable_type', 'valuetable_id'])
+            ->orderByDesc('no');
     }
 
     // 清理字段值

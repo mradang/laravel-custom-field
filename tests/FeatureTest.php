@@ -64,9 +64,15 @@ class FeatureTest extends TestCase
             ]
         ]);
         $this->assertEquals('未婚', $user1->customFieldGetDataItem($field2->id));
+        $user1->load('customFieldValues');
+        $this->assertSame(1, $user1->customFieldValues->count());
 
         $user1->customFieldSaveDataItem($field2->id, '已婚');
         $this->assertEquals('已婚', $user1->customFieldGetDataItem($field2->id));
+        $user1->load('customFieldValues');
+        $this->assertSame(2, $user1->customFieldValues->count());
+
+        $this->assertSame($user1->customFieldValues->first()?->data, $user1->customFieldData);
 
         $this->assertSame(
             [
@@ -82,7 +88,7 @@ class FeatureTest extends TestCase
             $user1->customFieldData
         );
 
-        $user1_field_data = $user1->customFieldValues->pop()->data;
+        $user1_field_data = $user1->customFieldValues->first()->data;
         $field2_value = Arr::first($user1_field_data, function ($value) use ($field2) {
             return $value['field_id'] === $field2->id;
         });
@@ -92,6 +98,12 @@ class FeatureTest extends TestCase
         $this->assertSame([], $user1->customFieldData);
 
         // 控制器
+        $controller = new TeamController();
+        $this->assertEquals('App\Models\Team', $controller->customFieldModel());
+
+        $controller = new UserController();
+        $this->assertEquals('mradang\LaravelCustomField\Test\User', $controller->customFieldModel());
+
         $this->app['router']->post('getBaseFields', [UserController::class, 'getBaseFields']);
         $res = $this->json('POST', 'getBaseFields');
         $res->assertJson([

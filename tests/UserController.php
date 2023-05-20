@@ -10,7 +10,7 @@ class UserController extends Controller
     use CustomFieldControllerTrait;
 
     // 定制字段模型
-    protected function customFieldModel()
+    public function customFieldModel()
     {
         return User::class;
     }

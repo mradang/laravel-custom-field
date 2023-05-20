@@ -25,11 +25,11 @@ class CustomField extends Model
 
     public function group()
     {
-        return $this->belongsTo('mradang\LaravelCustomField\Models\CustomFieldGroup', 'group_id');
+        return $this->belongsTo(CustomFieldGroup::class, 'group_id');
     }
 
     public function values()
     {
-        return $this->hasMany('mradang\LaravelCustomField\Models\CustomFieldValue', 'field_id');
+        return $this->hasMany(CustomFieldValue::class, 'field_id');
     }
 }

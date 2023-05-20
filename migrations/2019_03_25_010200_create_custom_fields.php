@@ -17,7 +17,7 @@ return new class extends Migration
         Schema::create('custom_fields', function (Blueprint $table) {
             $table->id();
             $table->string('model'); // 模型名
-            $table->unsignedInteger('group_id'); // 字段分组 ID
+            $table->unsignedBigInteger('group_id'); // 字段分组 ID
             $table->string('name'); // 字段名
             $table->unsignedTinyInteger('type'); // 字段类型
             $table->text('options'); // 选项列表，JSON
