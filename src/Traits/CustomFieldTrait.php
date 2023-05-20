@@ -2,6 +2,7 @@
 
 namespace mradang\LaravelCustomField\Traits;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use mradang\LaravelCustomField\Services\CustomFieldGroupService as GroupService;
 use mradang\LaravelCustomField\Services\CustomFieldService as FieldService;
 use mradang\LaravelCustomField\Services\CustomFieldValueService as ValueService;
@@ -168,10 +169,11 @@ trait CustomFieldTrait
     }
 
     // 取定制字段数据
-    // Attribute: customFieldData
-    public function getCustomFieldDataAttribute()
+    public function customFieldData(): Attribute
     {
-        return ValueService::get(__CLASS__, $this->getKey());
+        return Attribute::make(
+            get: fn () => ValueService::get(__CLASS__, $this->getKey()),
+        );
     }
 
     // 多态关联字段值
