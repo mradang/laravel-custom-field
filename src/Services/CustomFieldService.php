@@ -22,6 +22,7 @@ class CustomFieldService
             ])->max('sort') + 1,
         ]);
         $field->save();
+
         return $field;
     }
 
@@ -52,6 +53,7 @@ class CustomFieldService
         $field->required = $required;
 
         $field->save();
+
         return $field;
     }
 
@@ -101,6 +103,7 @@ class CustomFieldService
             'group_id' => $group_id,
         ])->max('sort') + 1;
         $field->save();
+
         return $field;
     }
 }

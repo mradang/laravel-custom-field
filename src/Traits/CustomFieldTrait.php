@@ -144,6 +144,7 @@ trait CustomFieldTrait
             '*.value' => 'nullable',
         ]);
         $ret = $validator->validate();
+
         return ValueService::save(__CLASS__, $this->getKey(), $ret);
     }
 
@@ -155,6 +156,7 @@ trait CustomFieldTrait
             'value' => 'nullable',
         ]);
         $ret = $validator->validate();
+
         return ValueService::saveItem(__CLASS__, $this->getKey(), $ret);
     }
 
@@ -165,6 +167,7 @@ trait CustomFieldTrait
             'field_id' => 'required|integer|min:1',
         ]);
         $ret = $validator->validate();
+
         return ValueService::getItem(__CLASS__, $this->getKey(), $ret['field_id']);
     }
 

@@ -3,8 +3,8 @@
 namespace mradang\LaravelCustomField\Services;
 
 use Illuminate\Support\Arr;
-use mradang\LaravelCustomField\Models\CustomFieldValue as FieldValue;
 use Illuminate\Support\Str;
+use mradang\LaravelCustomField\Models\CustomFieldValue as FieldValue;
 
 class CustomFieldValueService
 {
@@ -30,10 +30,10 @@ class CustomFieldValueService
     private static function diff(array $old, array $new)
     {
         $new_values = collect($new)->mapWithKeys(function ($item) {
-            return ['field' . $item['field_id'] => $item['value']];
+            return ['field'.$item['field_id'] => $item['value']];
         });
         $old_values = collect($old)->mapWithKeys(function ($item) {
-            return ['field' . $item['field_id'] => $item['value']];
+            return ['field'.$item['field_id'] => $item['value']];
         });
 
         $diff = $new_values->diffAssoc($old_values);

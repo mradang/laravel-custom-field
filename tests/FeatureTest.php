@@ -7,15 +7,12 @@ use Illuminate\Support\Facades\DB;
 
 class FeatureTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
     }
 
-    /**
-     * @covers CustomFieldTrait::customFieldGroupCreate
-     */
-    public function testBasicFeatures()
+    public function test_basic_features()
     {
         // 字段分组
         $this->assertTrue(in_array('通用字段', User::customFieldBaseGroups()));
@@ -61,7 +58,7 @@ class FeatureTest extends TestCase
             [
                 'field_id' => $field2->id,
                 'value' => '未婚',
-            ]
+            ],
         ]);
         $this->assertEquals('未婚', $user1->customFieldGetDataItem($field2->id));
         $user1->load('customFieldValues');
@@ -83,7 +80,7 @@ class FeatureTest extends TestCase
                 [
                     'field_id' => $field2->id,
                     'value' => '已婚',
-                ]
+                ],
             ],
             $user1->customFieldData
         );
@@ -98,10 +95,10 @@ class FeatureTest extends TestCase
         $this->assertSame([], $user1->customFieldData);
 
         // 控制器
-        $controller = new TeamController();
+        $controller = new TeamController;
         $this->assertEquals('App\Models\Team', $controller->customFieldModel());
 
-        $controller = new UserController();
+        $controller = new UserController;
         $this->assertEquals('mradang\LaravelCustomField\Test\User', $controller->customFieldModel());
 
         $this->app['router']->post('getBaseFields', [UserController::class, 'getBaseFields']);
@@ -124,7 +121,7 @@ class FeatureTest extends TestCase
         ]);
         $res->assertStatus(200)
             ->assertJson([
-                'name' => '家庭信息update2'
+                'name' => '家庭信息update2',
             ]);
 
         $this->app['router']->post('getFieldGroups', [UserController::class, 'getFieldGroups']);

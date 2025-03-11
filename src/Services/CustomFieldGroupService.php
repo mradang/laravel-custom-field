@@ -14,6 +14,7 @@ class CustomFieldGroupService
         ]);
         $group->sort = Group::where(['model' => $class])->max('sort') + 1;
         $group->save();
+
         return $group;
     }
 
@@ -23,10 +24,11 @@ class CustomFieldGroupService
             'model' => $class,
             'name' => $name,
         ]);
-        if (!$group->exists) {
+        if (! $group->exists) {
             $group->sort = Group::where(['model' => $class])->max('sort') + 1;
             $group->save();
         }
+
         return $group;
     }
 
@@ -43,6 +45,7 @@ class CustomFieldGroupService
         } else {
             $query->where('id', $group_id);
         }
+
         return $query->with(['fields' => function ($query) {
             $query->orderBy('sort');
         }])->orderBy('sort')->get();
@@ -54,6 +57,7 @@ class CustomFieldGroupService
         if ($group->model === $class) {
             $group->name = $name;
             $group->save();
+
             return $group;
         }
     }

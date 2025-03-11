@@ -2,7 +2,6 @@
 
 namespace mradang\LaravelCustomField\Test;
 
-use Illuminate\Http\Request;
 use mradang\LaravelCustomField\Traits\CustomFieldControllerTrait;
 
 class UserController extends Controller
