@@ -1,0 +1,10 @@
+services:
+    php:
+        build:
+            context: ./php/
+        restart: "no"
+        volumes:
+            - "/home/yf/Developer/mradang/laravel-custom-field:/var/www/html"
+            - "/home/yf/.composer:/composer"
+        environment:
+            - "COMPOSER_HOME=/composer"
