@@ -1,12 +1,19 @@
 path:=$(shell pwd)
-docker-compose:=docker compose -f docker/docker-compose.yml
+name:=$(notdir $(shell pwd))
 user:=1000:1000
+dir:=-v $(path):/var/www/html -v /home/yf/.composer:/composer
 
 build:
-	$(docker-compose) build
+	docker build -t $(name) .
 
 shell:
-	$(docker-compose) run -it --rm -u $(user) php sh -c "/bin/bash"
+	docker run -it --rm $(dir) -u $(user) $(name) sh -c "/bin/bash"
 
 test:
-	$(docker-compose) run -it --rm -u $(user) php sh -c "/var/www/html/vendor/bin/phpunit --colors=always --display-phpunit-deprecations"
+	docker run -it --rm $(dir) -u $(user) $(name) sh -c "/var/www/html/vendor/bin/phpunit --colors=always --display-phpunit-deprecations"
+
+pint:
+ifndef FILE
+	$(error FILE is required, use: make pint FILE=path/to/file)
+endif
+	docker run --rm $(dir) -u $(user) $(name) sh -c "/var/www/html/vendor/bin/pint /var/www/html/$(FILE)"
