@@ -3,7 +3,7 @@
         "commands": [
             {
                 "match": "\\.php$",
-                "cmd": "cd ${workspaceFolder} && make pint FILE=${relativeFile}"
+                "cmd": "make pint FILE=${relativeFile}"
             }
         ]
     }
