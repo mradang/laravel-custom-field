@@ -53,43 +53,41 @@ class FeatureTest extends TestCase
         $user1->customFieldSaveData([
             [
                 'field_id' => $field1->id,
-                'value' => '2020-07-08',
+                'field_value' => '2020-07-08',
             ],
             [
                 'field_id' => $field2->id,
-                'value' => '未婚',
+                'field_value' => '未婚',
             ],
         ]);
         $this->assertEquals('未婚', $user1->customFieldGetDataItem($field2->id));
         $user1->load('customFieldValues');
-        $this->assertSame(1, $user1->customFieldValues->count());
+        $this->assertSame(2, $user1->customFieldValues->count());
 
         $user1->customFieldSaveDataItem($field2->id, '已婚');
         $this->assertEquals('已婚', $user1->customFieldGetDataItem($field2->id));
         $user1->load('customFieldValues');
         $this->assertSame(2, $user1->customFieldValues->count());
 
-        $this->assertSame($user1->customFieldValues->first()?->data, $user1->customFieldData);
+        $this->assertSame($user1->customFieldValues->pluck('field_value')->toArray(), Arr::pluck($user1->customFieldData, 'field_value'));
+        $this->assertSame($user1->customFieldValues->pluck('field_id')->toArray(), Arr::pluck($user1->customFieldData, 'field_id'));
 
         $this->assertSame(
             [
                 [
                     'field_id' => $field1->id,
-                    'value' => '2020-07-08',
+                    'field_value' => '2020-07-08',
                 ],
                 [
                     'field_id' => $field2->id,
-                    'value' => '已婚',
+                    'field_value' => '已婚',
                 ],
             ],
             $user1->customFieldData
         );
 
-        $user1_field_data = $user1->customFieldValues->first()->data;
-        $field2_value = Arr::first($user1_field_data, function ($value) use ($field2) {
-            return $value['field_id'] === $field2->id;
-        });
-        $this->assertEquals('已婚', $field2_value['value']);
+        $field2_value = $user1->customFieldValues->first(fn($item) => $item->field_id === $field2->id);
+        $this->assertEquals('已婚', $field2_value['field_value']);
 
         $user1->customFieldClearValues();
         $this->assertSame([], $user1->customFieldData);

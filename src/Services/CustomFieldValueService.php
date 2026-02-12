@@ -2,38 +2,47 @@
 
 namespace mradang\LaravelCustomField\Services;
 
-use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use mradang\LaravelCustomField\Models\CustomFieldValue as FieldValue;
 
 class CustomFieldValueService
 {
-    public static function save($class, $key, array $data)
+    public static function save($class, $key, array $data): Collection
     {
-        $value = FieldValue::orderByDesc('no')->firstOrNew([
+        $oldValues = FieldValue::where([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
-        ]);
+        ])
+            ->orderBy('field_id')
+            ->get()
+            ->map(function ($item) {
+                return ['field_id' => $item->field_id, 'field_value' => $item->field_value];
+            })
+            ->toArray();
 
-        $diff = self::diff($value->data, $data);
+        $diff = self::diff($oldValues, $data);
 
-        FieldValue::create([
-            'valuetable_type' => $class,
-            'valuetable_id' => $key,
-            'no' => ($value->no ?: 0) + 1,
-            'data' => $data,
-        ]);
+        collect($data)->each(function ($item) use ($class, $key) {
+            FieldValue::updateOrCreate([
+                'valuetable_type' => $class,
+                'valuetable_id' => $key,
+                'field_id' => $item['field_id'],
+            ], [
+                'field_value' => $item['field_value'],
+            ]);
+        });
 
         return $diff;
     }
 
-    private static function diff(array $old, array $new)
+    private static function diff(array $old, array $new): Collection
     {
         $new_values = collect($new)->mapWithKeys(function ($item) {
-            return ['field'.$item['field_id'] => $item['value']];
+            return ['field' . $item['field_id'] => $item['field_value']];
         });
         $old_values = collect($old)->mapWithKeys(function ($item) {
-            return ['field'.$item['field_id'] => $item['value']];
+            return ['field' . $item['field_id'] => $item['field_value']];
         });
 
         $diff = $new_values->diffAssoc($old_values);
@@ -49,48 +58,36 @@ class CustomFieldValueService
 
     public static function saveItem($class, $key, array $item)
     {
-        $value = FieldValue::orderByDesc('no')->firstOrNew([
+        return FieldValue::updateOrCreate([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
-        ]);
-
-        $data = $value->data;
-        $pos = collect($data)->search(fn ($row) => $row['field_id'] === $item['field_id']);
-
-        if ($pos === false) {
-            $data[] = $item;
-        } else {
-            $data[$pos] = $item;
-        }
-
-        return FieldValue::create([
-            'valuetable_type' => $class,
-            'valuetable_id' => $key,
-            'no' => ($value->no ?: 0) + 1,
-            'data' => $data,
+            'field_id' => $item['field_id'],
+        ], [
+            'field_value' => $item['field_value'],
         ]);
     }
 
     public static function getItem($class, $key, $field_id)
     {
-        $value = FieldValue::orderByDesc('no')->firstOrNew([
+        return FieldValue::firstWhere([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
-        ]);
-
-        $row = collect($value->data)->firstWhere('field_id', $field_id);
-
-        return Arr::get($row, 'value');
+            'field_id' => $field_id,
+        ])?->field_value;
     }
 
-    public static function get($class, $key)
+    public static function get($class, $key): array
     {
-        $value = FieldValue::orderByDesc('no')->firstOrNew([
+        return FieldValue::where([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
-        ]);
-
-        return $value->data;
+        ])
+            ->orderBy('field_id')
+            ->get()
+            ->map(function ($item) {
+                return ['field_id' => $item->field_id, 'field_value' => $item->field_value];
+            })
+            ->toArray();
     }
 
     public static function delete($class, $key)

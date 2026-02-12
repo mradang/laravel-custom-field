@@ -18,8 +18,8 @@ return new class extends Migration
             $table->id();
             $table->string('valuetable_type'); // 对应所属模型的类名
             $table->unsignedBigInteger('valuetable_id'); // 对应所属模型的 ID
-            $table->unsignedBigInteger('no'); // 序号
-            $table->longText('data'); // 字段数据
+            $table->unsignedBigInteger('field_id'); // 字段 ID
+            $table->string('field_value')->nullable(); // 字段值
             $table->timestamps();
             $table->index(['valuetable_type', 'valuetable_id']); // 索引
         });

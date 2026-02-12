@@ -10,11 +10,12 @@ trait CustomFieldControllerTrait
     public function customFieldModel(): ?string
     {
         if (preg_match('/(\w+)Controller$/', get_class($this), $matches)) {
-            $class = 'App\\Models\\'.$matches[1];
+            $class = 'App\\Models\\' . $matches[1];
             if (config('env') === 'testing' || class_exists($class)) {
                 return $class;
             }
         }
+        return null;
     }
 
     public function getBaseFields()
@@ -31,7 +32,7 @@ trait CustomFieldControllerTrait
     {
         $validatedData = $request->validate([
             'id' => 'required|integer',
-            'name' => 'required|string|not_in:'.implode(',', $this->customFieldModel()::customFieldBaseGroups()),
+            'name' => 'required|string|not_in:' . implode(',', $this->customFieldModel()::customFieldBaseGroups()),
         ], [
             'name.not_in' => '分组名无效',
             'name.required' => '分组名必填',
@@ -88,7 +89,7 @@ trait CustomFieldControllerTrait
             'name' => [
                 'required',
                 'string',
-                'not_in:'.implode(',', $this->customFieldModel()::customFieldBaseFields()),
+                'not_in:' . implode(',', $this->customFieldModel()::customFieldBaseFields()),
                 Rule::unique('custom_fields')->where(function ($query) use ($request) {
                     $query->where('model', $this->customFieldModel());
                     if (! $this->customFieldModel()::customFieldGloballyUnique()) {

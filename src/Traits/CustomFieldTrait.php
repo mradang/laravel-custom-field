@@ -136,12 +136,12 @@ trait CustomFieldTrait
     }
 
     // 保存定制字段数据
-    // data: 每项需包含两个属性：field_id, value
+    // data: 每项需包含两个属性：field_id, field_value
     public function customFieldSaveData(array $data)
     {
         $validator = validator($data, [
             '*.field_id' => 'required|integer|min:1',
-            '*.value' => 'nullable',
+            '*.field_value' => 'nullable',
         ]);
         $ret = $validator->validate();
 
@@ -149,11 +149,11 @@ trait CustomFieldTrait
     }
 
     // 保存单个定制字段数据
-    public function customFieldSaveDataItem(int $field_id, $value)
+    public function customFieldSaveDataItem(int $field_id, $field_value)
     {
-        $validator = validator(compact('field_id', 'value'), [
+        $validator = validator(compact('field_id', 'field_value'), [
             'field_id' => 'required|integer|min:1',
-            'value' => 'nullable',
+            'field_value' => 'nullable',
         ]);
         $ret = $validator->validate();
 
@@ -175,7 +175,7 @@ trait CustomFieldTrait
     public function customFieldData(): Attribute
     {
         return Attribute::make(
-            get: fn () => ValueService::get(__CLASS__, $this->getKey()),
+            get: fn() => ValueService::get(__CLASS__, $this->getKey()),
         );
     }
 
@@ -188,8 +188,7 @@ trait CustomFieldTrait
             'valuetable_type',
             'valuetable_id'
         )
-            ->select(['no', 'data', 'updated_at', 'valuetable_type', 'valuetable_id'])
-            ->orderByDesc('no');
+            ->select(['field_id', 'field_value', 'updated_at', 'valuetable_type', 'valuetable_id']);
     }
 
     // 清理字段值

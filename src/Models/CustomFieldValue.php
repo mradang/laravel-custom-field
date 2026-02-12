@@ -9,21 +9,13 @@ class CustomFieldValue extends Model
     protected $fillable = [
         'valuetable_type',
         'valuetable_id',
-        'no',
-        'data',
+        'field_id',
+        'field_value',
     ];
 
     protected $hidden = [
         'valuetable_type',
         'valuetable_id',
-    ];
-
-    protected $casts = [
-        'data' => 'array',
-    ];
-
-    protected $attributes = [
-        'data' => '[]',
     ];
 
     public function fieldvaluetable()
