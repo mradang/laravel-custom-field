@@ -1,7 +1,6 @@
 {
     "name": "mradang/laravel-custom-field",
     "description": "laravel-custom-field",
-    "version": "1.0.0",
     "type": "library",
     "license": "MIT",
     "authors": [
