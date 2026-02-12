@@ -39,10 +39,10 @@ class CustomFieldValueService
     private static function diff(array $old, array $new): Collection
     {
         $new_values = collect($new)->mapWithKeys(function ($item) {
-            return ['field' . $item['field_id'] => $item['field_value']];
+            return ['field'.$item['field_id'] => $item['field_value']];
         });
         $old_values = collect($old)->mapWithKeys(function ($item) {
-            return ['field' . $item['field_id'] => $item['field_value']];
+            return ['field'.$item['field_id'] => $item['field_value']];
         });
 
         $diff = $new_values->diffAssoc($old_values);
