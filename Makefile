@@ -10,4 +10,3 @@ shell:
 
 test:
 	$(docker-compose) run -it --rm -u $(user) php sh -c "/var/www/html/vendor/bin/phpunit --colors=always --display-phpunit-deprecations"
-
