@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('field_id'); // 字段 ID
             $table->text('field_value'); // 字段值
             $table->timestamps();
-            $table->index(['valuetable_type', 'valuetable_id']); // 索引
+            $table->index(['valuetable_type', 'valuetable_id', 'field_id', 'field_value']); // 索引
         });
     }
 

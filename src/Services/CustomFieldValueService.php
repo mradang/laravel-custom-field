@@ -2,6 +2,8 @@
 
 namespace mradang\LaravelCustomField\Services;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use mradang\LaravelCustomField\Models\CustomFieldValue as FieldValue;
@@ -88,6 +90,37 @@ class CustomFieldValueService
                 return ['field_id' => $item->field_id, 'field_value' => $item->field_value];
             })
             ->toArray();
+    }
+
+    public static function query(Builder $query, array $conditions = [], ?int $sortFieldId = null, string $sortOrder = 'asc')
+    {
+        // 查询
+        collect($conditions)->each(function ($cond) use ($query) {
+            $query->whereHas('customFieldValues', function ($q) use ($cond) {
+                $q->where('field_id', $cond['fieldId']);
+                if (in_array($cond['operator'], ['=', '<', '>', '!='])) {
+                    $q->where('field_value', $cond['operator'], $cond['queryValue']);
+                } elseif ($cond['operator'] === 'in') {
+                    $q->whereIn('field_value', Arr::wrap($cond['queryValue']));
+                } elseif ($cond['operator'] === 'between') {
+                    $q->whereBetween('field_value', Arr::wrap($cond['queryValue']));
+                }
+            });
+        });
+
+        // 排序
+        if ($sortFieldId) {
+            $modelTableName = $query->getModel()->getTable();
+            $valueTableName = (new FieldValue)->getTable();
+            $query->orderBy(
+                FieldValue::select('field_value')
+                    ->whereColumn($modelTableName.'.id', $valueTableName.'.valuetable_id')
+                    ->where($valueTableName.'.valuetable_type', get_class($query->getModel()))
+                    ->where('field_id', $sortFieldId)
+                    ->limit(1),
+                $sortOrder === 'asc' ? $sortOrder : 'desc',
+            );
+        }
     }
 
     public static function delete($class, $key)
