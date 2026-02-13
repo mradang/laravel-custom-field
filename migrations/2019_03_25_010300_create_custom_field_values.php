@@ -22,7 +22,7 @@ return new class extends Migration
             $table->text('field_value'); // 字段值
             $table->timestamps();
             $table->index(
-                ['valuetable_type', 'valuetable_id', 'field_id', 'field_value'],
+                ['valuetable_type', 'valuetable_id', 'field_id'],
                 'custom_field_values_index',
             ); // 索引
         });
