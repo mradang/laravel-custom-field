@@ -175,7 +175,7 @@ trait CustomFieldTrait
     public function customFieldData(): Attribute
     {
         return Attribute::make(
-            get: fn() => ValueService::get(__CLASS__, $this->getKey()),
+            get: fn () => ValueService::get(__CLASS__, $this->getKey()),
         );
     }
 
