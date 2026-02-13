@@ -41,11 +41,13 @@ class FeatureTest extends TestCase
         $this->assertSame(1, $field1->id);
         User::customFieldUpdate($field1->id, '出生日期', 3, [], $group1->id, true);
         $field2 = User::customFieldCreate('婚姻状况', 2, ['未婚', '已婚'], $group2->id, false);
+        $field3 = User::customFieldCreate('待删字段', 1, [], $group2->id, false);
 
-        $this->assertSame(2, User::customFields()->count());
+        $this->assertSame(3, User::customFields()->count());
         $this->assertSame(1, User::customFieldsByGroupId($group1->id)->count());
         User::customFieldMove($field2->id, $group1->id);
         $this->assertSame(2, User::customFieldsByGroupId($group1->id)->count());
+        $this->assertSame(1, User::customFieldsByGroupId($group2->id)->count());
 
         // 模型
         $user1 = User::create(['name' => 'user1']);
@@ -86,9 +88,20 @@ class FeatureTest extends TestCase
             $user1->customFieldData
         );
 
-        $field2_value = $user1->customFieldValues->first(fn($item) => $item->field_id === $field2->id);
+        $field2_value = $user1->customFieldValues->first(fn ($item) => $item->field_id === $field2->id);
         $this->assertEquals('已婚', $field2_value['field_value']);
+        $this->assertSame(2, $user1->customFieldValues->count());
 
+        // 删除字段时，关联的字段值也会被删除
+        $user1->customFieldSaveDataItem($field3->id, '测试');
+        $this->assertEquals('测试', $user1->customFieldGetDataItem($field3->id));
+        $sqls = $this->getQueryLog(function () use ($field3) {
+            $field3->delete();
+        });
+        $this->assertSame(2, $sqls->count());
+        $this->assertSame(2, $user1->customFieldValues->count());
+
+        // 清理全部字段值
         $user1->customFieldClearValues();
         $this->assertSame([], $user1->customFieldData);
 

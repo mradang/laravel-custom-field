@@ -32,4 +32,11 @@ class CustomField extends Model
     {
         return $this->hasMany(CustomFieldValue::class, 'field_id');
     }
+
+    protected static function booted()
+    {
+        static::deleting(function ($model) {
+            $model->values()->delete();
+        });
+    }
 }
