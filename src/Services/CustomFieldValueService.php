@@ -92,7 +92,7 @@ class CustomFieldValueService
             ->toArray();
     }
 
-    public static function query(Builder $query, array $conditions = [], ?int $sortFieldId = null, string $sortOrder = 'asc')
+    public static function query(Builder $query, array $conditions = [], ?int $sortFieldId = null, ?string $sortOrder = 'asc')
     {
         // 查询
         collect($conditions)->each(function ($cond) use ($query) {
