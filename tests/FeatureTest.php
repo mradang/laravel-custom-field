@@ -101,9 +101,31 @@ class FeatureTest extends TestCase
         $this->assertSame(2, $sqls->count());
         $this->assertSame(2, $user1->customFieldValues->count());
 
-        // 清理全部字段值
+        // 清理模型字段值
         $user1->customFieldClearValues();
         $this->assertSame([], $user1->customFieldData);
+
+        // 清理全部字段值
+        $user1->customFieldSaveData([
+            [
+                'field_id' => $field1->id,
+                'field_value' => '2020-07-08',
+            ],
+        ]);
+        $user2 = User::create(['name' => 'user2']);
+        $user2->customFieldSaveData([
+            [
+                'field_id' => $field1->id,
+                'field_value' => '2020-07-08',
+            ],
+            [
+                'field_id' => $field2->id,
+                'field_value' => '已婚',
+            ],
+        ]);
+        User::customFieldClearAllValues();
+        $this->assertSame([], $user1->customFieldData);
+        $this->assertSame([], $user2->customFieldData);
 
         // 控制器
         $controller = new TeamController;

@@ -25,15 +25,23 @@ class CustomFieldValueService
 
         $diff = self::diff($oldValues, $data);
 
-        collect($data)->each(function ($item) use ($class, $key) {
-            FieldValue::updateOrCreate([
+        if (count($oldValues)) {
+            FieldValue::where([
+                'valuetable_type' => $class,
+                'valuetable_id' => $key,
+            ])->whereIn('field_id', collect($data)->pluck('field_id'))->delete();
+        }
+
+        FieldValue::insert(collect($data)->map(function ($item) use ($class, $key) {
+            return [
                 'valuetable_type' => $class,
                 'valuetable_id' => $key,
                 'field_id' => $item['field_id'],
-            ], [
                 'field_value' => $item['field_value'],
-            ]);
-        });
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        })->toArray());
 
         return $diff;
     }
@@ -128,6 +136,13 @@ class CustomFieldValueService
         FieldValue::where([
             'valuetable_type' => $class,
             'valuetable_id' => $key,
+        ])->delete();
+    }
+
+    public static function clear($class)
+    {
+        FieldValue::where([
+            'valuetable_type' => $class,
         ])->delete();
     }
 }

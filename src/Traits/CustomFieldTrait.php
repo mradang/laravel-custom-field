@@ -135,6 +135,12 @@ trait CustomFieldTrait
         return FieldService::move(__CLASS__, $id, $group_id);
     }
 
+    // 清理全部字段值
+    public static function customFieldClearAllValues()
+    {
+        ValueService::clear(__CLASS__);
+    }
+
     // 保存定制字段数据
     // data: 每项需包含两个属性：field_id, field_value
     public function customFieldSaveData(array $data)

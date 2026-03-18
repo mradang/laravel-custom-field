@@ -100,6 +100,8 @@ Model::customFieldDelete($id)
 Model::customFieldSaveSort(array $data)
 // 字段移动
 Model::customFieldMove($id, $group_id)
+// 清理全部定制字段值
+Model::customFieldClearAllValues()
 // 保存定制字段数据
 $model->customFieldSaveData(array $data)
 // 保存单个定制字段数据
