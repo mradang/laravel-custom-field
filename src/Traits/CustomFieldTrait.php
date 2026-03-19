@@ -141,6 +141,21 @@ trait CustomFieldTrait
         ValueService::clear(__CLASS__, $ids);
     }
 
+    // 批量保存定制字段数据
+    // data: 每项需包含两个属性：valuetable_id 和 fields (field_id, field_value)
+    public static function customFieldBatchSaveData(array $data)
+    {
+        $validator = validator($data, [
+            '*.valuetable_id' => 'required|integer|min:1',
+            '*.fields' => 'required|array',
+            '*.fields.*.field_id' => 'required|integer|min:1',
+            '*.fields.*.field_value' => 'nullable',
+        ]);
+        $ret = $validator->validate();
+
+        return ValueService::batchSave(__CLASS__, $ret);
+    }
+
     // 保存定制字段数据
     // data: 每项需包含两个属性：field_id, field_value
     public function customFieldSaveData(array $data)

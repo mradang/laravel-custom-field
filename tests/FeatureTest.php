@@ -186,6 +186,38 @@ class FeatureTest extends TestCase
         ], $post1->customFieldData);
     }
 
+    public function test_custom_field_batch_save_data()
+    {
+        $group1 = User::customFieldGroupCreate(__FUNCTION__);
+        $field1 = User::customFieldCreate('生日', 3, [], $group1->id, false);
+        $user1 = User::create(['name' => 'user1']);
+        $user2 = User::create(['name' => 'user2']);
+
+        User::customFieldBatchSaveData([
+            [
+                'valuetable_id' => $user1->id,
+                'fields' => [
+                    [
+                        'field_id' => $field1->id,
+                        'field_value' => '2020-07-08',
+                    ],
+                ],
+            ],
+            [
+                'valuetable_id' => $user2->id,
+                'fields' => [
+                    [
+                        'field_id' => $field1->id,
+                        'field_value' => '2026-03-19',
+                    ],
+                ],
+            ],
+        ]);
+
+        $this->assertEquals('2020-07-08', $user1->customFieldGetDataItem($field1->id));
+        $this->assertEquals('2026-03-19', $user2->customFieldGetDataItem($field1->id));
+    }
+
     protected function getQueryLog(\Closure $callback): \Illuminate\Support\Collection
     {
         $sqls = \collect([]);

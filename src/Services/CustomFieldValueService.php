@@ -10,6 +10,26 @@ use mradang\LaravelCustomField\Models\CustomFieldValue as FieldValue;
 
 class CustomFieldValueService
 {
+    public static function batchSave($class, array $data)
+    {
+        FieldValue::where('valuetable_type', $class)
+            ->whereIn('valuetable_id', collect($data)->pluck('valuetable_id'))
+            ->delete();
+
+        FieldValue::insert(collect($data)->map(function ($row) use ($class) {
+            return collect($row['fields'])->map(function ($field) use ($class, $row) {
+                return [
+                    'valuetable_type' => $class,
+                    'valuetable_id' => $row['valuetable_id'],
+                    'field_id' => $field['field_id'],
+                    'field_value' => $field['field_value'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            });
+        })->flatten(1)->toArray());
+    }
+
     public static function save($class, $key, array $data): Collection
     {
         $oldValues = FieldValue::where([
