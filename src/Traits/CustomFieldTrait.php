@@ -136,9 +136,9 @@ trait CustomFieldTrait
     }
 
     // 清理全部字段值
-    public static function customFieldClearAllValues()
+    public static function customFieldClearAllValues(array $ids = [])
     {
-        ValueService::clear(__CLASS__);
+        ValueService::clear(__CLASS__, $ids);
     }
 
     // 保存定制字段数据

@@ -105,28 +105,6 @@ class FeatureTest extends TestCase
         $user1->customFieldClearValues();
         $this->assertSame([], $user1->customFieldData);
 
-        // 清理全部字段值
-        $user1->customFieldSaveData([
-            [
-                'field_id' => $field1->id,
-                'field_value' => '2020-07-08',
-            ],
-        ]);
-        $user2 = User::create(['name' => 'user2']);
-        $user2->customFieldSaveData([
-            [
-                'field_id' => $field1->id,
-                'field_value' => '2020-07-08',
-            ],
-            [
-                'field_id' => $field2->id,
-                'field_value' => '已婚',
-            ],
-        ]);
-        User::customFieldClearAllValues();
-        $this->assertSame([], $user1->customFieldData);
-        $this->assertSame([], $user2->customFieldData);
-
         // 控制器
         $controller = new TeamController;
         $this->assertEquals('App\Models\Team', $controller->customFieldModel());
@@ -163,6 +141,49 @@ class FeatureTest extends TestCase
             ['name' => '基本信息'],
             ['name' => '家庭信息update2'],
         ]);
+    }
+
+    public function test_custom_field_clear_all_values()
+    {
+        $group1 = User::customFieldGroupCreate(__FUNCTION__);
+        $field1 = User::customFieldCreate('生日', 3, [], $group1->id, false);
+        $user1 = User::create(['name' => 'user1']);
+        $user1->customFieldSaveData([
+            [
+                'field_id' => $field1->id,
+                'field_value' => '2020-07-08',
+            ],
+        ]);
+        $user2 = User::create(['name' => 'user2']);
+        $user2->customFieldSaveData([
+            [
+                'field_id' => $field1->id,
+                'field_value' => '2026-03-19',
+            ],
+        ]);
+
+        $group2 = Post::customFieldGroupCreate(__FUNCTION__);
+        $field2 = Post::customFieldCreate('链接', 1, [], $group2->id, false);
+        $post1 = Post::create(['name' => 'php学习']);
+        $post1->customFieldSaveData([
+            [
+                'field_id' => $field2->id,
+                'field_value' => 'https://www.baidu.com',
+            ],
+        ]);
+
+        User::customFieldClearAllValues([$user1->id]);
+        $this->assertSame([], $user1->customFieldData);
+        $this->assertEquals('2026-03-19', $user2->customFieldGetDataItem($field1->id));
+
+        User::customFieldClearAllValues();
+        $this->assertSame([], $user2->customFieldData);
+        $this->assertSame([
+            [
+                'field_id' => $field2->id,
+                'field_value' => 'https://www.baidu.com',
+            ],
+        ], $post1->customFieldData);
     }
 
     protected function getQueryLog(\Closure $callback): \Illuminate\Support\Collection

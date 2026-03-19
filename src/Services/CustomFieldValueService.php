@@ -139,10 +139,12 @@ class CustomFieldValueService
         ])->delete();
     }
 
-    public static function clear($class)
+    public static function clear($class, array $ids)
     {
-        FieldValue::where([
-            'valuetable_type' => $class,
-        ])->delete();
+        FieldValue::where('valuetable_type', $class)
+            ->when(count($ids), function ($query) use ($ids) {
+                $query->whereIn('valuetable_id', $ids);
+            })
+            ->delete();
     }
 }
