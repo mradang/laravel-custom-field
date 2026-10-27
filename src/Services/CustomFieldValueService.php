@@ -126,7 +126,7 @@ class CustomFieldValueService
         collect($conditions)->each(function ($cond) use ($query) {
             $query->whereHas('customFieldValues', function ($q) use ($cond) {
                 $q->where('field_id', $cond['fieldId']);
-                if (in_array($cond['operator'], ['=', '<', '>', '!='])) {
+                if (in_array($cond['operator'], ['=', '<', '>', '<=', '>=', '!='])) {
                     $q->where('field_value', $cond['operator'], $cond['queryValue']);
                 } elseif ($cond['operator'] === 'in') {
                     $q->whereIn('field_value', Arr::wrap($cond['queryValue']));
